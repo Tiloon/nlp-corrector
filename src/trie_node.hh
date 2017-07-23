@@ -39,6 +39,8 @@ public:
     {
         return this == &other;
     }
+
+    void draw(std::ofstream& file, int id);
 };
 
 
