@@ -1,7 +1,7 @@
 #include <iostream>
 #include "utils.hh"
 #include "output.hh"
-#include "trieNode.hh"
+#include "trie_node.hh"
 
 int main(int argc, char** argv) {
 //    if (argc != 3)

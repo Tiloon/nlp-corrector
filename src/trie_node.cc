@@ -3,7 +3,7 @@
 //
 
 #include <algorithm>
-#include "trieNode.hh"
+#include "trie_node.hh"
 
 void TrieNode::insert(std::string word) {
     if (!word.length()) {
