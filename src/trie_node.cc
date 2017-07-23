@@ -3,6 +3,7 @@
 //
 
 #include <algorithm>
+#include <iostream>
 #include "trie_node.hh"
 
 void TrieNode::insert(std::string word) {
@@ -11,24 +12,18 @@ void TrieNode::insert(std::string word) {
         return;
     }
 
-    for (TrieNode son : this->sons_) {
+    for (TrieNode& son : this->sons_) {
         if (word.find(son.get_prefix()) == 0) { // ie: word is "abc" and son is "ab"
             son.insert(word.substr(son.get_prefix().length()));
             return;
         }
         if (son.get_prefix().find(word) == 0) { // ie: son is "abc" and word is "ab"
             TrieNode n = TrieNode(word, 1);
-            n.addSon(son.removeFromPrefix(word.length()));
-            this->addSon(n);
-            std::remove(sons_.begin(), sons_.end(), son);
+            n.sons_.push_back(son.removeFromPrefix(word.length()));
+            this->sons_.erase(std::remove(this->sons_.begin(), this->sons_.end(), son), this->sons_.end());
+            this->sons_.push_back(n);
             return;
         }
     }
-    addSon(TrieNode(word, 1));
-
-}
-
-
-void TrieNode::addSon(TrieNode n) {
-    this->sons_.push_back(n);
+    this->sons_.emplace_back(word, 1);
 }

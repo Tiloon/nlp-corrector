@@ -30,7 +30,6 @@ public:
     void insert(std::string word);
     std::string& get_prefix() { return prefix_; }
     void setWordEnd() { isWordEnd_ = 1; }
-    void addSon(TrieNode n);
     TrieNode& removeFromPrefix(int nbChar) {
         prefix_ = prefix_.substr(nbChar);
         return *this;

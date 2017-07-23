@@ -15,8 +15,11 @@ int main(int argc, char** argv) {
     myOutput.insert(output_element("toto", 12, 0));
     myOutput.print_json();
 
+    std::cout << std::endl;
 
     TrieNode root = TrieNode("", 1);
     root.insert("test");
     root.insert("coucou");
+    root.insert("couco");
+    return 42;
 }
