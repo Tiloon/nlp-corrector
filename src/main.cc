@@ -6,8 +6,12 @@
 
 int main(int argc, char** argv) {
 
-    TrieNode root = TrieNode("", 1);
+    TrieNode root = TrieNode("", 0);
     root.insert("test");
+    root.insert("te");
+
+    root.insert("toast");
+
     root.insert("tester");
     root.insert("coucou");
 

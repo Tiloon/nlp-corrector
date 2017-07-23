@@ -43,8 +43,11 @@ static int id_builder() {
 void TrieNode::draw(std::ofstream& file, int id) {
     for (TrieNode& son : this->sons_) {
         int id_next = id_builder();
-        file << "node" << id << " [label=\"" << prefix_ << "\"]; node"
-        << id_next << " [label=\"" << son.prefix_  << " \"]; node" << id << "-> node" << id_next << "\n";
+        file << "node" << id << " [label=\"" << prefix_ << "\", style=\"filled\", color=\"" <<
+                (isWordEnd_ ? "cadetblue" : "blue") << "\"]; node"
+        << id_next << " [label=\"" << son.prefix_  << " \", style=\"filled\", color=\"" <<
+                (son.isWordEnd_ ? "cadetblue" : "blue")
+        <<"\"]; node" << id << "-> node" << id_next << "\n";
         son.draw(file, id_next);
     }
 }
