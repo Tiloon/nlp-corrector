@@ -49,11 +49,3 @@ int lev(const std::string& str1, const std::string& str2)
   }
   return d[k * len2 + len2];
 }
-
-int print_json(const std::string& str, int freq, int dist) {
-  std::cout << "{\"word\":\"" << str << "\",\"freq\":" << freq << ",\"distance\":" << dist << "}";
-}
-
-int print_json(output_element elt) {
-  std::cout << "{\"word\":\"" << elt.elt_ << "\",\"freq\":" << elt.freq_ << ",\"distance\":" << elt.dist_ << "}";
-}
