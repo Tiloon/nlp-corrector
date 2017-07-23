@@ -33,14 +33,16 @@ static int lev(const std::string& str1, const std::string& str2)
     k = i % 2;
     for (int j = 1; j <= len2; ++j)
     {
-      if (str1[i - 1] == str2[j - 1])
+      if (str1[i] == str2[j])
         c = 0;
       else
         c = 1;
-      d[(len2 * k) + j] = min(d[(len2 * !k) + j] + 1,
+      int tmp = min(d[(len2 * !k) + j] + 1,
           d[(len2 * k) + j - 1] + 1,
           d[(len2 * !k) + j - 1] + c);
-      // if (i > 1 && j > 1 && str[1
+      if (i > 1 && j > 1 && str1[i] == str2[j - 1] && str1[i - 1] == str2[j])
+        tmp = std::min(tmp, d[(len2 * k) + j]);
+      d[(len2 * k) + j] = tmp;
     }
     d[len2 * k] = i;
   }
