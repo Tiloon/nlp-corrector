@@ -36,6 +36,10 @@ public:
         return *this;
     }
 
+    bool operator==(const TrieNode& other) const
+    {
+        return this == &other;
+    }
 };
 
 

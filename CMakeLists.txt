@@ -3,5 +3,5 @@ project(nlp_corrector)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
-set(SOURCE_FILES src/main.cpp src/trieNode.cpp)
+set(SOURCE_FILES src/main.cc src/utils.cc src/output.cc src/output_element.cc src/trieNode.cc)
 add_executable(nlp_corrector ${SOURCE_FILES})

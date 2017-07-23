@@ -1,6 +1,8 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
+#include "utils.hh"
+#include "output_element.hh"
 
 static int min(int a, int b, int c)
 {
@@ -16,8 +18,7 @@ static int min(int a, int b, int c)
   return c;
 }
 
-
-static int lev(const std::string& str1, const std::string& str2)
+int lev(const std::string& str1, const std::string& str2)
 {
   int len1 = str1.size();
   int len2 = str2.size();
@@ -49,8 +50,10 @@ static int lev(const std::string& str1, const std::string& str2)
   return d[k * len2 + len2];
 }
 
-int main(int argc, char** argv) {
-  if (argc != 3)
-    return 1;
-  std::cout << lev(argv[1], argv[2]) << "\n";
+int print_json(const std::string& str, int freq, int dist) {
+  std::cout << "{\"word\":\"" << str << "\",\"freq\":" << freq << ",\"distance\":" << dist << "}";
+}
+
+int print_json(output_element elt) {
+  std::cout << "{\"word\":\"" << elt.elt_ << "\",\"freq\":" << elt.freq_ << ",\"distance\":" << elt.dist_ << "}";
 }
