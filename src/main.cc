@@ -6,14 +6,14 @@
 
 int main(int argc, char** argv) {
 
-    TrieNode root = TrieNode("", 0);
-    root.insert("test");
-    root.insert("te");
+    TrieNode root = TrieNode("", 0, 0);
+    root.insert("test", 1);
+    root.insert("tech", 1);
 
-    root.insert("toast");
+//    root.insert("toast", 1);
 
-    root.insert("tester");
-    root.insert("coucou");
+//    root.insert("tester", 1);
+//    root.insert("coucou", 1);
 
     std::ofstream myfile;
     myfile.open ("trie.dot");
