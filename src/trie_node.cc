@@ -15,8 +15,8 @@ void TrieNode::insert(std::string word, int freq) {
         return;
     }
 
-    for (TrieNode& son : this->sons_) {
-        for(int i = 0; i < word.length() - 1; i++) { // FIXME changer le sens de la boucle ?
+    for (TrieNode& son : *(this->sons_)) {
+        for(int i = 0; i < word.length(); i++) { // FIXME changer le sens de la boucle ?
             std::string cutWord = word.substr(0, word.length() - i);  //word "abcd", cutWord "abc"
             if (cutWord.find(son.get_prefix()) == 0) { // ie: cutWord is "abc" and son is "ab"
                 std::cerr << "> Going inside son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
@@ -26,9 +26,9 @@ void TrieNode::insert(std::string word, int freq) {
             if (son.get_prefix().find(cutWord) == 0) { // ie: son is "abce" and cutWord is "abc"
                 std::cerr << ">>>> Splitting son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
                 TrieNode n = TrieNode(cutWord, 0, freq);
-                n.sons_.push_back(son.removeFromPrefix(cutWord.length()));
-                this->sons_.erase(std::remove(this->sons_.begin(), this->sons_.end(), son), this->sons_.end());
-                this->sons_.push_back(n);
+                n.sons_->push_back(son.removeFromPrefix(cutWord.length()));
+                this->sons_->erase(std::remove(this->sons_->begin(), this->sons_->end(), son), this->sons_->end());
+                this->sons_->push_back(n);
                 n.insert(word.substr(cutWord.length()), freq);
                 return;
             }
@@ -47,9 +47,9 @@ void TrieNode::insert(std::string word, int freq) {
 //            return;
 //        }
     }
-    std::cerr << "> New node |" << word << "| |" << prefix_ << "| sons size:" << sons_.size() << std::endl;
-    this->sons_.emplace_back(word, 1, freq);
-    std::cerr << "> New node |" << word << "| |" << prefix_ << "| sons size:" << sons_.size() << std::endl;
+    std::cerr << "> New node |" << word << "| |" << prefix_ << "| sons size:" << sons_->size() << std::endl;
+    this->sons_->emplace_back(word, 1, freq);
+    std::cerr << "> New node |" << word << "| |" << prefix_ << "| sons size:" << sons_->size() << std::endl;
 
 
 }
@@ -60,9 +60,9 @@ static int id_builder() {
 }
 
 void TrieNode::draw(std::ofstream& file, int id) {
-    for (TrieNode& son : this->sons_) {
+    for (TrieNode& son : *(this->sons_)) {
         int id_next = id_builder();
-        std::cerr << "Draw " << son.prefix_  << " " << son.sons_.size() << std::endl;
+        std::cerr << "Draw " << son.prefix_  << " " << son.sons_->size() << std::endl;
         file << "node" << id << " [label=\"" << prefix_ << "\", style=\"filled\", color=\"" <<
                 (isWordEnd_ ? "cadetblue" : "blue") << "\"]; node"
         << id_next << " [label=\"" << son.prefix_  << " \", style=\"filled\", color=\"" <<

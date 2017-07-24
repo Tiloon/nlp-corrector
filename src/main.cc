@@ -10,13 +10,15 @@ int main(int argc, char** argv) {
     root.insert("test", 1);
     root.insert("tech", 1);
 
-//    root.insert("toast", 1);
+    root.insert("toast", 1);
 
-//    root.insert("tester", 1);
-//    root.insert("coucou", 1);
+    root.insert("tester", 1);
+    root.insert("coucou", 1);
+    root.insert("tom", 1);
+    root.insert("te", 1);
 
     std::ofstream myfile;
-    myfile.open ("trie.dot");
+    myfile.open("trie.dot");
     myfile << "digraph trie {\n";
     root.draw(myfile, 0);
     myfile << "}\n";

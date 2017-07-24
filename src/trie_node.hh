@@ -8,24 +8,32 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 class TrieNode {
 public:
     std::string prefix_;
-    std::vector<TrieNode> sons_;
+    std::vector<TrieNode>* sons_;
     int isWordEnd_;
     int freq_;
 
+//    TrieNode(const TrieNode& n) :
+//        prefix_(n.prefix_),
+//                sons_(n.sons_),
+//                isWordEnd_(n.isWordEnd_),
+//                freq_(n.freq_)
+//    {}
+
     TrieNode(std::string prefix, int freq) :
             prefix_(prefix),
-            sons_(),
+            sons_(new std::vector<TrieNode>()),
             isWordEnd_(0),
             freq_(freq)
     {}
 
     TrieNode(std::string prefix, int wordEnd, int freq) :
             prefix_(prefix),
-            sons_(),
+            sons_(new std::vector<TrieNode>()),
             isWordEnd_(wordEnd),
             freq_(freq)
     {}
