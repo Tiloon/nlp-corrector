@@ -3,3 +3,5 @@
                           ======================
 
 FIXME :(
+
+ dot -Tpng ./Debug/trie.dot -o OutputFile.png && feh OutputFile.png

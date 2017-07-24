@@ -5,10 +5,9 @@
 #include <algorithm>
 #include <iostream>
 #include "trie_node.hh"
-#include <iostream>
 #include <fstream>
 
-void TrieNode::insert(std::string word) {
+void TrieNode::insert(std::string word, int freq) {
     std::cerr << "Insert: " << word << std::endl;
     if (!word.length()) {
         std::cerr << "> Word end!" << std::endl;
@@ -20,19 +19,22 @@ void TrieNode::insert(std::string word) {
     for (TrieNode& son : this->sons_) {
         if (word.find(son.get_prefix()) == 0) { // ie: word is "abc" and son is "ab"
             std::cerr << "> Going inside son " << son.get_prefix() << std::endl;
-            son.insert(word.substr(son.get_prefix().length()));
+            son.insert(word.substr(son.get_prefix().length()), freq);
             return;
         }
         if (son.get_prefix().find(word) == 0) { // ie: son is "abc" and word is "ab"
             std::cerr << "> Splitting son" << son.get_prefix() << std::endl;
-            TrieNode n = TrieNode(word, 1);
+            TrieNode n = TrieNode(word, 1, freq);
             n.sons_.push_back(son.removeFromPrefix(word.length()));
             this->sons_.erase(std::remove(this->sons_.begin(), this->sons_.end(), son), this->sons_.end());
             this->sons_.push_back(n);
             return;
         }
     }
-    this->sons_.emplace_back(word, 1);
+    std::cerr << "> New node!" << std::endl;
+
+    this->sons_.emplace_back(word, 1, freq);
+
 }
 
 static int id_builder() {

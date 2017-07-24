@@ -14,20 +14,23 @@ public:
     std::string prefix_;
     std::vector<TrieNode> sons_;
     int isWordEnd_;
+    int freq_;
 
-    TrieNode(std::string prefix) :
+    TrieNode(std::string prefix, int freq) :
             prefix_(prefix),
             sons_(),
-            isWordEnd_(0)
+            isWordEnd_(0),
+            freq_(freq)
     {}
 
-    TrieNode(std::string prefix, int wordEnd) :
+    TrieNode(std::string prefix, int wordEnd, int freq) :
             prefix_(prefix),
             sons_(),
-            isWordEnd_(wordEnd)
+            isWordEnd_(wordEnd),
+            freq_(freq)
     {}
 
-    void insert(std::string word);
+    void insert(std::string word, int freq);
     std::string& get_prefix() { return prefix_; }
     void setWordEnd() { isWordEnd_ = 1; }
     TrieNode& removeFromPrefix(int nbChar) {
