@@ -13,18 +13,44 @@
 #include "trie_node.hh"
 // 00 => 10
 
-static std::vector<struct node>* outputVect = new std::vector<struct node>();
+static long get_current_offset(long nodeSize) {
+    static long  offset = 0;
+    offset += nodeSize;
+    return offset;
+}
 
-char* get_son(char* start, char* ptr) {
+void TrieNode::computeOffset() {
+    offset_ = get_current_offset(prefix_.size() + 1 + sizeof (long) * 2) - (prefix_.size() + 1 + sizeof (long) * 2);
+    if (this->sons_->empty())
+//        return;
+        get_current_offset(1);
+    else
+        for (auto& e : *this->sons_) {
+            e.computeOffset();
+        }
+}
+
+//static std::vector<struct node>* outputVect = new std::vector<struct node>();
+
+char* get_son(char* ptr) {
     std::string name = ptr;
-    long* next = (long*)(ptr + name.size() + 2 + sizeof (long));
-    return start + *next;
+    return ptr + name.size() + 1 + sizeof (long) * 2;
 }
 
 char* get_brother(char* start, char* ptr) {
     std::string name = ptr;
-    return ptr + name.size() + 2 + sizeof (long) * 2;
+    long* next = (long*)(ptr + name.size() + 1 + sizeof (long));
+    if (*next == 0)
+        return "\0";
+    return start + *next;
 }
+
+long get_freq(char* ptr) {
+    std::string name = ptr;
+    long* freq = (long*)(ptr + name.size() + 1);
+    return *freq;
+}
+
 void process_file(char* start, char *ptr) {
     while (true) {
 //        struct node *n = (struct node *) ptr;
@@ -43,7 +69,7 @@ void process_file(char* start, char *ptr) {
     }
 }
 
-void map_file(char *path) {
+void* map_file(char *path) {
     int fd;
     struct stat stat;
     void* ptr;
@@ -58,32 +84,32 @@ void map_file(char *path) {
         err(EXIT_FAILURE, "%s", path);
 
     std::cerr << ptr << std::endl;
-    process_file((char*) ptr, (char*) ptr);
+    return ptr;
+//    process_file((char*) ptr, (char*) ptr);
 }
 
-//
-// Created by hugo on 23/07/17.
 void TrieNode::writeToBinaryFile(std::ofstream &of) {
-    for (int i = 0; i < this->sons_->size(); ++i) {
-        TrieNode& son = (*this->sons_)[i];
-        long freq = 10; // son.freq_
-        outputVect->push_back({son.prefix_, freq, 0l});
-//        of.write((char*)son.prefix_.c_str(), son.prefix_.size() + 1);
-//        if (son.prefix_.size() + 1 % 2)
-//            of.write("\0", 1);
-//        of.write((char*)&freq, sizeof(long)); // freq
-        long offset = 0l;
-        son.writeToBinaryFile(of);
-        offset = of.tellp();
-        if (i == this->sons_->size() - 1) {
-            long tmp = 0;
-            of.write((char *) &tmp, sizeof(long)); // next
-        }
-        else
-            of.write((char*)&offset, sizeof(long)); // next
+    if (this->sons_->empty()) {
+        of.write("\0", 1);
+        return;
     }
-//    long tmp = -1;
-//    of.write((char*)&tmp, sizeof(long));
+    for (int i = 0; i < this->sons_->size() - 1; ++i) {
+        TrieNode& son = (*this->sons_)[i];
+        TrieNode& next_son = (*this->sons_)[i + 1];
+        of.write((char*)son.prefix_.c_str(), son.prefix_.size() + 1);
+        of.write((char*)&son.freq_, sizeof(long));
+        of.write((char*)&next_son.offset_, sizeof(long));
+
+        son.writeToBinaryFile(of);
+    }
+    // Last node in line, no next
+    TrieNode& son = (*this->sons_)[this->sons_->size() - 1];
+    of.write((char*)son.prefix_.c_str(), son.prefix_.size() + 1);
+    of.write((char*)&son.freq_, sizeof(long));
+    long tmp = 0;
+    of.write((char*)&tmp, sizeof(long));
+
+    son.writeToBinaryFile(of);
 }
 
 void TrieNode::insert(std::string word, int freq) {
@@ -150,3 +176,5 @@ void TrieNode::draw(std::ofstream& file, int id) {
         son.draw(file, id_next);
     }
 }
+
+

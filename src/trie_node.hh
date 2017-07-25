@@ -17,36 +17,36 @@ struct node {
     long next; // 0 if node is a leaf, else position in file
     // next should be next son of the father, and next element sequentially should be the first son, 0 if no more
 };
-void map_file(char *path);
+void * map_file(char *path);
+char* get_brother(char* start, char* ptr);
+char* get_son(char* ptr);
+long get_freq(char* ptr);
 
 class TrieNode {
 public:
     std::string prefix_;
     std::vector<TrieNode>* sons_;
     int isWordEnd_;
-    int freq_;
-
-//    TrieNode(const TrieNode& n) :
-//        prefix_(n.prefix_),
-//                sons_(n.sons_),
-//                isWordEnd_(n.isWordEnd_),
-//                freq_(n.freq_)
-//    {}
+    long freq_;
+    long offset_;
 
     TrieNode(std::string prefix, int freq) :
             prefix_(prefix),
             sons_(new std::vector<TrieNode>()),
             isWordEnd_(0),
-            freq_(freq)
+            freq_(freq),
+            offset_(0)
     {}
 
     TrieNode(std::string prefix, int wordEnd, int freq) :
             prefix_(prefix),
             sons_(new std::vector<TrieNode>()),
             isWordEnd_(wordEnd),
-            freq_(freq)
+            freq_(freq),
+            offset_(0)
     {}
 
+    void computeOffset();
     void insert(std::string word, int freq);
     std::string& get_prefix() { return prefix_; }
     void setWordEnd() { isWordEnd_ = 1; }
