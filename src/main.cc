@@ -49,9 +49,26 @@ int main(int argc, char** argv) {
         int freq = std::stoi(freqs);
         root.insert(word, freq);
     }
-    dump_trie(root);
-
+//    dump_trie(root);
     return 0;
+
+/*int main(int argc, char** argv) {
+
+    TrieNode root = TrieNode("", 1);
+    root.insert("test");
+    root.insert("tester");
+    root.insert("coucou");
+
+    char* file_name = (char *) "graph.bin";
+    std::ofstream myfile;
+    myfile.open(file_name, std::ios::out | std::ios::binary);
+    root.writeToBinaryFile(myfile);
+//    myfile << "digraph trie {\n";
+//    root.draw(myfile, 0);
+//    myfile << "}\n";
+    myfile.close();
+    std::cerr << "Starting processing of file" << std::endl;
+    map_file(file_name);*/
 
 }
 

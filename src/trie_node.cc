@@ -1,11 +1,90 @@
 //
-// Created by hugo on 23/07/17.
-//
 
 #include <algorithm>
 #include <iostream>
 #include "trie_node.hh"
+#include <iostream>
 #include <fstream>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <err.h>
+#include <cstring>
+#include "trie_node.hh"
+// 00 => 10
+
+static std::vector<struct node>* outputVect = new std::vector<struct node>();
+
+char* get_son(char* start, char* ptr) {
+    std::string name = ptr;
+    long* next = (long*)(ptr + name.size() + 2 + sizeof (long));
+    return start + *next;
+}
+
+char* get_brother(char* start, char* ptr) {
+    std::string name = ptr;
+    return ptr + name.size() + 2 + sizeof (long) * 2;
+}
+void process_file(char* start, char *ptr) {
+    while (true) {
+//        struct node *n = (struct node *) ptr;
+        std::string name = ptr;
+        if (name.empty()) {
+            break;
+        }
+        long* freq = (long*)(ptr + name.size() + 1);
+        long* next = (long*)(ptr + name.size() + 1 + sizeof (long));
+        std::cerr << name << std::endl;
+        std::cerr << *freq << std::endl;
+        std::cerr << *next << std::endl;
+//        if (*next != 0)
+//            process_file(start, start + *next); // iterate on this son
+        ptr = ptr + name.size() + 2 + sizeof (long) * 2;
+    }
+}
+
+void map_file(char *path) {
+    int fd;
+    struct stat stat;
+    void* ptr;
+
+    if ((fd = open(path, O_RDONLY)) < 0)
+        err(EXIT_FAILURE, "%s", path);
+
+    if (fstat(fd, &stat) != 0)
+        err(EXIT_FAILURE, "%s", path);
+
+    if ((ptr = mmap(NULL, stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
+        err(EXIT_FAILURE, "%s", path);
+
+    std::cerr << ptr << std::endl;
+    process_file((char*) ptr, (char*) ptr);
+}
+
+//
+// Created by hugo on 23/07/17.
+void TrieNode::writeToBinaryFile(std::ofstream &of) {
+    for (int i = 0; i < this->sons_->size(); ++i) {
+        TrieNode& son = (*this->sons_)[i];
+        long freq = 10; // son.freq_
+        outputVect->push_back({son.prefix_, freq, 0l});
+//        of.write((char*)son.prefix_.c_str(), son.prefix_.size() + 1);
+//        if (son.prefix_.size() + 1 % 2)
+//            of.write("\0", 1);
+//        of.write((char*)&freq, sizeof(long)); // freq
+        long offset = 0l;
+        son.writeToBinaryFile(of);
+        offset = of.tellp();
+        if (i == this->sons_->size() - 1) {
+            long tmp = 0;
+            of.write((char *) &tmp, sizeof(long)); // next
+        }
+        else
+            of.write((char*)&offset, sizeof(long)); // next
+    }
+//    long tmp = -1;
+//    of.write((char*)&tmp, sizeof(long));
+}
 
 void TrieNode::insert(std::string word, int freq) {
 //    std::cerr << "Insert |" << word << "| to node |" << prefix_ << "|" << std::endl;

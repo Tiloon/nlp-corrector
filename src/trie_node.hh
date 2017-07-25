@@ -10,6 +10,15 @@
 #include <vector>
 #include <memory>
 
+// node struct that can be mapped in the binary file
+struct node {
+    std::string name; // \0 is no more data
+    long freq; // 0 if not a word
+    long next; // 0 if node is a leaf, else position in file
+    // next should be next son of the father, and next element sequentially should be the first son, 0 if no more
+};
+void map_file(char *path);
+
 class TrieNode {
 public:
     std::string prefix_;
@@ -52,6 +61,7 @@ public:
     }
 
     void draw(std::ofstream& file, int id);
+    void writeToBinaryFile(std::ofstream& of);
 };
 
 
