@@ -8,9 +8,9 @@
 #include <fstream>
 
 void TrieNode::insert(std::string word, int freq) {
-    std::cerr << "Insert |" << word << "| to node |" << prefix_ << "|" << std::endl;
+//    std::cerr << "Insert |" << word << "| to node |" << prefix_ << "|" << std::endl;
     if (!word.length()) {
-        std::cerr << "> Word end |" << word << "|" << std::endl;
+//        std::cerr << "> Word end |" << word << "|" << std::endl;
         this->setWordEnd();
         return;
     }
@@ -19,12 +19,12 @@ void TrieNode::insert(std::string word, int freq) {
         for(int i = 0; i < word.length(); i++) { // FIXME changer le sens de la boucle ?
             std::string cutWord = word.substr(0, word.length() - i);  //word "abcd", cutWord "abc"
             if (cutWord.find(son.get_prefix()) == 0) { // ie: cutWord is "abc" and son is "ab"
-                std::cerr << "> Going inside son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
+//                std::cerr << "> Going inside son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
                 son.insert(word.substr(son.get_prefix().length()), freq);
                 return;
             }
             if (son.get_prefix().find(cutWord) == 0) { // ie: son is "abce" and cutWord is "abc"
-                std::cerr << ">>>> Splitting son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
+//                std::cerr << ">>>> Splitting son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
                 TrieNode n = TrieNode(cutWord, 0, freq);
                 n.sons_->push_back(son.removeFromPrefix(cutWord.length()));
                 this->sons_->erase(std::remove(this->sons_->begin(), this->sons_->end(), son), this->sons_->end());
@@ -47,9 +47,9 @@ void TrieNode::insert(std::string word, int freq) {
 //            return;
 //        }
     }
-    std::cerr << "> New node |" << word << "| |" << prefix_ << "| sons size:" << sons_->size() << std::endl;
+//    std::cerr << "> New node |" << word << "| |" << prefix_ << "| sons size:" << sons_->size() << std::endl;
     this->sons_->emplace_back(word, 1, freq);
-    std::cerr << "> New node |" << word << "| |" << prefix_ << "| sons size:" << sons_->size() << std::endl;
+//    std::cerr << "> New node |" << word << "| |" << prefix_ << "| sons size:" << sons_->size() << std::endl;
 
 
 }
