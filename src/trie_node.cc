@@ -11,6 +11,8 @@
 #include <err.h>
 #include <cstring>
 #include "trie_node.hh"
+#include "utils.hh"
+#include "output.hh"
 // 00 => 10
 
 static long get_current_offset(long nodeSize) {
@@ -178,3 +180,29 @@ void TrieNode::draw(std::ofstream& file, int id) {
 }
 
 
+char *BinNode::g_son(char *ptr) {
+    return get_son(ptr);
+}
+
+char *BinNode::g_brother(char *ptr) {
+    return get_brother(this->start, ptr);
+}
+
+void resolveRec(std::string currWord, char* curr, BinNode& myNode) {
+    int dist = lev(currWord, myNode.wanted_word);
+    if (dist <= myNode.approx)
+        myNode.out.insert(OutputElement(currWord, get_freq(curr), dist));
+    char* firstBro = myNode.g_son(curr);
+    while (*firstBro != '\0') {
+        resolveRec(currWord.append(curr), firstBro, myNode);
+        firstBro = myNode.g_brother(curr);
+    }
+}
+
+void resolve(char* ptr, std::string word, int approx) {
+    int max = (int) (word.size() + approx);
+    auto myOutput = Output();
+    BinNode myNode = BinNode(ptr, max, approx, word, myOutput);
+    resolveRec("", ptr, myNode);
+    myOutput.print_json();
+}

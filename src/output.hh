@@ -9,12 +9,12 @@
 #include <memory>
 #include "output_element.hh"
 
-class output {
+class Output {
 public:
-    std::set<output_element> data_;
-    output() : data_(std::set<output_element>()) { }
-    void insert(const output_element& elt);
-    void insert(const output_element&& elt);
+    std::set<OutputElement> data_;
+    Output() : data_(std::set<OutputElement>()) { }
+    void insert(const OutputElement& elt);
+    void insert(const OutputElement&& elt);
     void print_json();
 };
 

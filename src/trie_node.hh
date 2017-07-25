@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "output.hh"
 
 // node struct that can be mapped in the binary file
 struct node {
@@ -21,6 +22,21 @@ void * map_file(char *path);
 char* get_brother(char* start, char* ptr);
 char* get_son(char* ptr);
 long get_freq(char* ptr);
+
+class BinNode {
+    char* start;
+public:
+    int approx;
+    int max;
+    std::string wanted_word;
+    Output out;
+
+    BinNode(char *start, int max, int approx, std::string wanted_word, Output& output)
+            : start(start), max(max), approx(approx),
+              wanted_word(wanted_word), out(output) { }
+    char* g_son(char* ptr);
+    char* g_brother(char* ptr);
+};
 
 class TrieNode {
 public:

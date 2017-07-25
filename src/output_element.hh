@@ -7,15 +7,15 @@
 
 #include <string>
 
-class output_element {
+class OutputElement {
 public:
     const std::string elt_;
-    int freq_;
+    long freq_;
     int dist_;
 
-    output_element(const std::string &elt, int freq, int dist) : elt_(elt), freq_(freq), dist_(dist) { }
+    OutputElement(const std::string &elt, long freq, int dist) : elt_(elt), freq_(freq), dist_(dist) { }
 
-    bool operator<(const output_element& other) const
+    bool operator<(const OutputElement& other) const
     {
         if (dist_ != other.dist_)
             return dist_ < other.dist_;

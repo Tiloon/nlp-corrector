@@ -15,7 +15,7 @@ static void dump_trie(TrieNode& n) {
 }
 
 void print_spaces(int depth) {
-    for (int i = 0; i < depth * 4; ++i)
+    for (int i = 0; i < depth * 2; ++i)
         std::cerr << " ";
 }
 
@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
         std::cerr << "File cannot be written:" << argv[2] << std::endl;
     }
 
+    std::cerr << "Building graph" << std::endl;
     TrieNode root = TrieNode("", 0, 0);
 
     std::string line;
@@ -71,14 +72,15 @@ int main(int argc, char** argv) {
         root.insert(word, freq);
     }
 //    root = (*root.sons_)[0];
+    std::cerr << "Writing graph" << std::endl;
     (*root.sons_)[0].computeOffset();
     root.writeToBinaryFile(out_file);
-    dump_trie(root);
+//    dump_trie(root);
     out_file.close();
     char* ptr = (char*) map_file(argv[2]);
     char* curr = ptr;
 
-    print_all(ptr, curr, 0);
+//    print_all(ptr, curr, 0);
 //    char* son = get_son(ptr);
 //    char* ptr_brother = get_brother(ptr, ptr);
 //    char* son_brother = get_brother(ptr, son);
@@ -126,11 +128,11 @@ static TrieNode& test_trie() {
 }
 
 static void test_output() {
-    auto myOutput = output();
-    myOutput.insert(output_element("toto", 13, 1));
-    myOutput.insert(output_element("tata", 12, 0));
-    myOutput.insert(output_element("toto", 12, 1));
-    myOutput.insert(output_element("toto", 12, 0));
+    auto myOutput = Output();
+    myOutput.insert(OutputElement("toto", 13, 1));
+    myOutput.insert(OutputElement("tata", 12, 0));
+    myOutput.insert(OutputElement("toto", 12, 1));
+    myOutput.insert(OutputElement("toto", 12, 0));
     myOutput.print_json();
 
     std::cout << std::endl;
