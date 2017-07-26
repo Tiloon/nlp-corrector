@@ -83,16 +83,9 @@ int main(int argc, char** argv) {
         std::cout << "Usage: " << argv[0] << " /path/to/word/freq.txt /path/to/output/dict.bin" << std::endl;
         return 139;
     }
-//    write_bin(argv);
-
-    std::cerr << "Searching in graph" << std::endl;
-    char* ptr = (char*) map_file(argv[2]);
-//    print_all(ptr, ptr, 0);
-
-    resolve(ptr, "test", 1);
+    write_bin(argv);
 
     return 0;
-
 }
 
 static TrieNode& test_trie() {
