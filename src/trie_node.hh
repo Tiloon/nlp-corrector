@@ -21,7 +21,7 @@ long get_freq(const char* ptr, size_t len);
 void resolve(char* ptr, std::string word, int approx);
 long get_current_offset(long nodeSize);
 
-static char* word = (char *) calloc(WORD_MAX_SIZE, 1);
+static char* word = (char *) calloc(WORD_MAX_SIZE, 1); // TODO: can't this just be word[500] ?
 
 class MyString {
 public:
@@ -96,6 +96,8 @@ public:
     void draw(std::ofstream& file, int id);
 
     void writeToBinaryFile(std::ofstream& of);
+
+    void write_string(std::ofstream &of, TrieNode &son) const;
 };
 
 

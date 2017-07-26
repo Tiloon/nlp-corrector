@@ -28,7 +28,8 @@ void TrieNode::compute_offset_head() {
 }
 
 void TrieNode::compute_offset() {
-    offset_ = get_current_offset(prefix_.size() + 1 + sizeof (long) * 2) - (prefix_.size() + 1 + sizeof (long) * 2);
+    offset_ = get_current_offset(prefix_.size() + 1 + 1 + sizeof (long) * 2)
+                              - (prefix_.size() + 1 + 1 + sizeof (long) * 2);
     if (this->sons_->empty())
         get_current_offset(1);
     else
@@ -83,7 +84,13 @@ void* map_file(char *path) {
 
 //    std::cerr << ptr << std::endl;
     return ptr;
-//    process_file((char*) ptr, (char*) ptr);
+}
+
+void TrieNode::write_string(std::ofstream &of, TrieNode &son) const {
+    // write size of string before, it's better than doing a strlen in App
+    char size = (char) son.prefix_.size();
+    of.write(&size, 1);
+    of.write((char*)son.prefix_.c_str(), son.prefix_.size() + 1); // TODO: remove this + 1
 }
 
 void TrieNode::writeToBinaryFile(std::ofstream &of) {
@@ -94,7 +101,7 @@ void TrieNode::writeToBinaryFile(std::ofstream &of) {
     for (int i = 0; i < this->sons_->size() - 1; ++i) {
         TrieNode& son = (*this->sons_)[i];
         TrieNode& next_son = (*this->sons_)[i + 1];
-        of.write((char*)son.prefix_.c_str(), son.prefix_.size() + 1);
+        write_string(of, son);
         of.write((char*)&son.freq_, sizeof(long));
         of.write((char*)&next_son.offset_, sizeof(long));
 
@@ -102,7 +109,7 @@ void TrieNode::writeToBinaryFile(std::ofstream &of) {
     }
     // Last node in line, no next
     TrieNode& son = (*this->sons_)[this->sons_->size() - 1];
-    of.write((char*)son.prefix_.c_str(), son.prefix_.size() + 1);
+    write_string(of, son);
     of.write((char*)&son.freq_, sizeof(long));
     long tmp = 0;
     of.write((char*)&tmp, sizeof(long));
@@ -174,7 +181,8 @@ inline const char *BinNode::g_brother(const char *ptr, size_t len) {
 
 void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
     while (*curr != '\0') {
-        size_t len = strlen(curr);
+        size_t len = (size_t) *curr;
+        curr = curr + 1;
         currWord.append(curr, len);
         MyString new_word = MyString(currWord.index + len);
         if (new_word.index <= myNode.wanted_word.length() + myNode.approx) {
