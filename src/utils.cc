@@ -42,10 +42,11 @@ int lev(const std::string &s1, const std::string &s2) {
     return dist[len1][len2];
 }
 
-int lev_max(const std::string &s1, const std::string &s2, int maxDist) {
-    int len1 = s1.length();
+static int dist[500][500];
+
+int lev_max(char* s1, size_t len1, const std::string &s2, int maxDist) {
     int len2 = s2.length();
-    int dist[len1 + 1][len2 + 1];
+//    int dist[len1 + 1][len2 + 1];
 
 
     for (int i = 0; i <= len1; i++) {

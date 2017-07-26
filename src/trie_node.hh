@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <cstring>
 #include "output.hh"
 
 // node struct that can be mapped in the binary file
@@ -23,6 +24,24 @@ char *get_brother(char *start, char *ptr, size_t i);
 char *get_son(char *ptr, size_t len);
 long get_freq(char* ptr, size_t len);
 void resolve(char* ptr, std::string word, int approx);
+
+class MyString {
+public:
+    char* word;
+    size_t index;
+    MyString() {
+        word = (char *) calloc(500, 1);
+        index = 0;
+    }
+    MyString(char *word, size_t index) : word(word), index(index) { }
+    char* get_string() {
+        word[index] = '\0';
+        return word;
+    }
+    void append(char* str, size_t len) {
+        memcpy(word + index, str, len);
+    }
+};
 
 class BinNode {
     char* start;

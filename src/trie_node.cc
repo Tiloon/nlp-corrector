@@ -179,22 +179,22 @@ char *BinNode::g_brother(char *ptr, size_t len) {
     return get_brother(this->start, ptr, len);
 }
 
-void resolveRec(std::string& currWord, char* curr, BinNode& myNode) {
+void resolveRec(MyString currWord, char* curr, BinNode& myNode) {
     while (*curr != '\0') {
         size_t len = strlen(curr);
         long freq = get_freq(curr, len);
-        std::string new_word = std::string(currWord).append(curr);
+        currWord.append(curr, len);
+        MyString new_word = MyString(currWord.word, currWord.index + len);
         if (freq != 0/* && currWord.length() >= new_word.length() - myNode.approx - 1*/) {
-            int dist = lev_max(new_word, myNode.wanted_word, myNode.approx);
+            int dist = lev_max(new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx);
 //        if (dist + len > myNode.wanted_word.size())
 //            return;
             if (dist <= myNode.approx) {
-                myNode.out.insert(OutputElement(new_word, freq, dist));
+                myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
             }
         }
-        if (currWord.size() > myNode.wanted_word.size() + myNode.approx) {
+        if (currWord.index > myNode.wanted_word.size() + myNode.approx)
             return;
-        }
         char* first_son = myNode.g_son(curr, len);
         resolveRec(new_word, first_son, myNode);
         curr = myNode.g_brother(curr, len);
@@ -205,7 +205,8 @@ void resolve(char* ptr, std::string word, int approx) {
     int max = (int) (word.size() + approx);
     auto myOutput = Output();
     BinNode myNode = BinNode(ptr, max, approx, word, myOutput);
-    std::string currWord = "";
+    MyString currWord = MyString();
+//    std::string currWord = "";
     resolveRec(currWord, ptr, myNode);
     myOutput.print_json();
 }
