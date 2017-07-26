@@ -15,7 +15,7 @@
 #include "output.hh"
 // 00 => 10
 
-static long get_current_offset(long nodeSize) {
+long get_current_offset(long nodeSize) {
     static long  offset = 0;
     offset += nodeSize;
     return offset;
@@ -30,7 +30,6 @@ void TrieNode::compute_offset_head() {
 void TrieNode::compute_offset() {
     offset_ = get_current_offset(prefix_.size() + 1 + sizeof (long) * 2) - (prefix_.size() + 1 + sizeof (long) * 2);
     if (this->sons_->empty())
-//        return;
         get_current_offset(1);
     else
         for (auto& e : *this->sons_) {
@@ -38,17 +37,14 @@ void TrieNode::compute_offset() {
         }
 }
 
-//static std::vector<struct node>* outputVect = new std::vector<struct node>();
-
 inline const char *get_son(const char *ptr, size_t len) {
     return ptr + len + 1 + sizeof (long) * 2;
 }
 
 inline const char *get_brother(const char *start, const char *ptr, size_t len) {
-    long* next = (long*)(ptr + len + 1 + sizeof (long));
-    if (*next == 0)
-        return "\0";
-    return start + *next;
+//    if (*next == 0)
+//        return "\0";
+    return start + *(long*)(ptr + len + 1 + sizeof (long));
 }
 
 long get_freq(const char* ptr, size_t len) {
@@ -208,6 +204,6 @@ void resolve(char* ptr, std::string word, int approx) {
     BinNode myNode = BinNode(ptr, max, approx, word, myOutput);
     MyString currWord = MyString();
 //    std::string currWord = "";
-    resolveRec(currWord, ptr, myNode);
+    resolveRec(currWord, ptr + 1, myNode); // ptr + 1 because of first empty char
     myOutput.print_json();
 }

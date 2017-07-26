@@ -12,18 +12,12 @@
 #include <cstring>
 #include "output.hh"
 
-// node struct that can be mapped in the binary file
-struct node {
-    std::string name; // \0 is no more data
-    long freq; // 0 if not a word
-    long next; // 0 if node is a leaf, else position in file
-    // next should be next son of the father, and next element sequentially should be the first son, 0 if no more
-};
 void * map_file(char *path);
 const char *get_brother(const char *start, const char *ptr, size_t i);
 const char *get_son(const char *ptr, size_t len);
 long get_freq(const char* ptr, size_t len);
 void resolve(char* ptr, std::string word, int approx);
+long get_current_offset(long nodeSize);
 
 static char* word = (char *) calloc(500, 1);
 
@@ -98,6 +92,7 @@ public:
     }
 
     void draw(std::ofstream& file, int id);
+
     void writeToBinaryFile(std::ofstream& of);
 };
 
