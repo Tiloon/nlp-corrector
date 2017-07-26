@@ -42,8 +42,6 @@ inline const char *get_son(const char *ptr, size_t len) {
 }
 
 inline const char *get_brother(const char *start, const char *ptr, size_t len) {
-//    if (*next == 0)
-//        return "\0";
     return start + *(long*)(ptr + len + 1 + sizeof (long));
 }
 

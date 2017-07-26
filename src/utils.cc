@@ -10,7 +10,7 @@ inline static int min(int a, int b, int c) {
 
 static int dist[500][500];
 
-inline void init_dist() {
+void init_dist() {
     for (int i = 0; i < 500; i++) {
         dist[i][0] = i;
         dist[0][i] = i;
