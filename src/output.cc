@@ -14,7 +14,7 @@ void Output::insert(const OutputElement&& elt) {
     this->data_.insert(elt);
 }
 
-static void print_elt(OutputElement elt) {
+inline static void print_elt(const OutputElement& elt) {
     std::cout << "{\"word\":\"" << elt.elt_ << "\",\"freq\":" << elt.freq_ << ",\"distance\":" << elt.dist_ << "}";
 }
 
