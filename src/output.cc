@@ -28,6 +28,6 @@ void Output::print_json() {
             print_elt(*it);
         }
     }
-    std::cout << "]";
+    std::cout << "]\n";
 }
 
