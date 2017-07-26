@@ -91,7 +91,7 @@ void* map_file(char *path) {
     if ((ptr = mmap(NULL, stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
         err(EXIT_FAILURE, "%s", path);
 
-    std::cerr << ptr << std::endl;
+//    std::cerr << ptr << std::endl;
     return ptr;
 //    process_file((char*) ptr, (char*) ptr);
 }
@@ -186,7 +186,8 @@ void resolveRec(std::string& currWord, char* curr, BinNode& myNode) {
     while (*curr != '\0') {
         int freq = get_freq(curr);
         if (freq != 0) {
-            int dist = lev_tmp(std::string(currWord).append(curr), myNode.wanted_word);
+            int dist = lev_max(std::string(currWord).append(curr), myNode.wanted_word, myNode.approx);
+//            int dist = lev(std::string(currWord).append(curr), myNode.wanted_word);
             if (dist <= myNode.approx)
                 myNode.out.insert(OutputElement(std::string(currWord).append(curr), freq, dist));
         }
