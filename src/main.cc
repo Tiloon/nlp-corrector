@@ -4,6 +4,8 @@
 #include "output.hh"
 #include "trie_node.hh"
 
+void write_bin(char *const *argv);
+
 static void dump_trie(TrieNode& n) {
     std::ofstream myfile;
 
@@ -24,7 +26,7 @@ void print_all(char *ptr, char *curr, int depth) {
         print_spaces(depth);
         std::cerr << curr << " " << get_freq(curr) << std::endl;
         print_all(ptr, get_son(curr), depth + 1);
-        print_all(ptr, get_brother(ptr, curr), depth + 1);
+        print_all(ptr, get_brother(ptr, curr), depth);
 //        print_spaces(depth);
 //        print_spaces(depth);
 //        std::cerr << "Visiting son" << std::endl;
@@ -41,6 +43,20 @@ int main(int argc, char** argv) {
         std::cout << "Usage: " << argv[0] << " /path/to/word/freq.txt /path/to/output/dict.bin" << std::endl;
         return 139;
     }
+    write_bin(argv);
+
+    char* ptr = (char*) map_file(argv[2]);
+    print_all(ptr, ptr, 0);
+    std::string toto = "hey";
+    std::string heyasta = std::string(toto).append("asta");
+    std::string tata = std::string(toto).append("ing");
+    resolve(ptr, "test", 3);
+
+    return 0;
+
+}
+
+void write_bin(char *const *argv) {
     std::ifstream in_file;
     std::ofstream out_file;
 
@@ -58,57 +74,27 @@ int main(int argc, char** argv) {
         std::cerr << "File cannot be written:" << argv[2] << std::endl;
     }
 
+    std::ifstream &in_file1 = in_file;
+    std::ofstream &out_file1 = out_file;
     std::cerr << "Building graph" << std::endl;
     TrieNode root = TrieNode("", 0, 0);
 
     std::string line;
-    while(std::getline(in_file, line)) {
+    while(getline(in_file1, line)) {
         std::string word;
         std::string freqs;
         std::istringstream iss(line);
-        std::getline(iss, word, '\t');
-        std::getline(iss, freqs, '\t');
-        int freq = std::stoi(freqs);
+        getline(iss, word, '\t');
+        getline(iss, freqs, '\t');
+        int freq = stoi(freqs);
         root.insert(word, freq);
     }
 //    root = (*root.sons_)[0];
     std::cerr << "Writing graph" << std::endl;
     (*root.sons_)[0].computeOffset();
-    root.writeToBinaryFile(out_file);
+    root.writeToBinaryFile(out_file1);
 //    dump_trie(root);
-    out_file.close();
-    char* ptr = (char*) map_file(argv[2]);
-    char* curr = ptr;
-
-//    print_all(ptr, curr, 0);
-//    char* son = get_son(ptr);
-//    char* ptr_brother = get_brother(ptr, ptr);
-//    char* son_brother = get_brother(ptr, son);
-//    std::cerr << ptr << " " << get_freq(ptr) << std::endl;
-//    std::cerr << son << " " << get_freq(son) << std::endl;
-//    std::cerr << son_brother << " " << get_freq(son_brother) << std::endl;
-//    if (ptr_brother != NULL)
-//        std::cerr << ptr_brother << " " << get_freq(ptr_brother) << std::endl;
-    return 0;
-
-/*int main(int argc, char** argv) {
-
-    TrieNode root = TrieNode("", 1);
-    root.insert("test");
-    root.insert("tester");
-    root.insert("coucou");
-
-    char* file_name = (char *) "graph.bin";
-    std::ofstream myfile;
-    myfile.open(file_name, std::ios::out | std::ios::binary);
-    root.writeToBinaryFile(myfile);
-//    myfile << "digraph trie {\n";
-//    root.draw(myfile, 0);
-//    myfile << "}\n";
-    myfile.close();
-    std::cerr << "Starting processing of file" << std::endl;
-    map_file(file_name);*/
-
+    out_file1.close();
 }
 
 static TrieNode& test_trie() {

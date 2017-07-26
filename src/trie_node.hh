@@ -22,6 +22,7 @@ void * map_file(char *path);
 char* get_brother(char* start, char* ptr);
 char* get_son(char* ptr);
 long get_freq(char* ptr);
+void resolve(char* ptr, std::string word, int approx);
 
 class BinNode {
     char* start;
