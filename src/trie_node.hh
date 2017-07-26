@@ -20,25 +20,25 @@ struct node {
     // next should be next son of the father, and next element sequentially should be the first son, 0 if no more
 };
 void * map_file(char *path);
-char *get_brother(char *start, char *ptr, size_t i);
-char *get_son(char *ptr, size_t len);
-long get_freq(char* ptr, size_t len);
+const char *get_brother(const char *start, const char *ptr, size_t i);
+const char *get_son(const char *ptr, size_t len);
+long get_freq(const char* ptr, size_t len);
 void resolve(char* ptr, std::string word, int approx);
+
+static char* word = (char *) calloc(500, 1);
 
 class MyString {
 public:
-    char* word;
     size_t index;
     MyString() {
-        word = (char *) calloc(500, 1);
         index = 0;
     }
-    MyString(char *word, size_t index) : word(word), index(index) { }
-    char* get_string() {
+    MyString(size_t index) : index(index) { }
+    inline char* get_string() {
         word[index] = '\0';
         return word;
     }
-    void append(char* str, size_t len) {
+    inline void append(const char* str, size_t len) {
         memcpy(word + index, str, len);
     }
 };
@@ -54,8 +54,8 @@ public:
     BinNode(char *start, int max, int approx, std::string wanted_word, Output& output)
             : start(start), max(max), approx(approx),
               wanted_word(wanted_word), out(output) { }
-    char *g_son(char *ptr, size_t len);
-    char *g_brother(char *ptr, size_t i);
+    const char *g_son(const char *ptr, size_t len);
+    const char *g_brother(const char *ptr, size_t i);
 };
 
 class TrieNode {

@@ -12,7 +12,7 @@ void print_spaces(int depth) {
         std::cerr << " ";
 }
 
-void print_all(char *ptr, char *curr, int depth) {
+/*void print_all(const char *ptr, const char *curr, int depth) {
     if (*curr != '\0') {
         print_spaces(depth);
         std::cerr << curr << " " << get_freq(curr, strlen(curr)) << std::endl;
@@ -27,7 +27,7 @@ void print_all(char *ptr, char *curr, int depth) {
 //        print_spaces(depth);
 //        std::cerr << "Finished visiting brother" << std::endl;
     }
-}
+}*/
 
 
 void search(char* ptr, std::string word, int dist) {
@@ -52,13 +52,12 @@ int main(int argc, char** argv) {
         std::getline(iss, word, ' ');
         std::cerr << approx << " " << precision << " " << word << std::endl;
 
-        if (approx.compare("approx")) {
-            std::cerr << "Approx expected" << std::endl;
-            continue;
-        }
+//        if (approx.compare("approx")) {
+//            std::cerr << "Approx expected" << std::endl;
+//            continue;
+//        }
 
         search(ptr, word, stoi(precision));
-
     }
 #else
     std::string precision = argv[2];

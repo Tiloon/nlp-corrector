@@ -21,22 +21,14 @@ void print_spaces(int depth) {
         std::cerr << " ";
 }
 
-void print_all(char *ptr, char *curr, int depth) {
+/*void print_all(char *ptr, char *curr, int depth) {
     if (*curr != '\0') {
         print_spaces(depth);
         std::cerr << curr << " " << get_freq(curr, strlen(curr)) << std::endl;
         print_all(ptr, get_son(curr, strlen(curr)), depth + 1);
         print_all(ptr, get_brother(ptr, curr, strlen(curr)), depth);
-//        print_spaces(depth);
-//        print_spaces(depth);
-//        std::cerr << "Visiting son" << std::endl;
-//        std::cerr << "Finished visiting son" << std::endl;
-//        print_spaces(depth);
-//        std::cerr << "Visiting brother" << std::endl;
-//        print_spaces(depth);
-//        std::cerr << "Finished visiting brother" << std::endl;
     }
-}
+}*/
 
 void write_bin(char *const *argv) {
     std::ifstream in_file;
@@ -88,7 +80,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-static TrieNode& test_trie() {
+static TrieNode test_trie() {
     TrieNode root = TrieNode("", 0, 0);
     root.insert("test", 1);
     root.insert("tech", 1);
