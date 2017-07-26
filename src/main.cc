@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
     std::cerr << "Searching in graph" << std::endl;
     char* ptr = (char*) map_file(argv[2]);
 //    print_all(ptr, ptr, 0);
-    resolve(ptr, "mamanana", 1);
+    resolve(ptr, "toto", 1);
 
     return 0;
 

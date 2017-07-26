@@ -188,7 +188,7 @@ void resolveRec(std::string& currWord, char* curr, BinNode& myNode) {
         if (freq != 0) {
             int dist = lev_tmp(std::string(currWord).append(curr), myNode.wanted_word);
             if (dist <= myNode.approx)
-                myNode.out.insert(OutputElement(currWord, freq, dist));
+                myNode.out.insert(OutputElement(std::string(currWord).append(curr), freq, dist));
         }
         else if (currWord.size() > myNode.wanted_word.size() + myNode.approx)
             return;
