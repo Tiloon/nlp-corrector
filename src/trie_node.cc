@@ -186,9 +186,7 @@ void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
         currWord.append(curr, len);
         MyString new_word = MyString(currWord.index + len);
         if (freq != 0 && myNode.wanted_word.length() >= new_word.index - myNode.approx) {
-            int dist = lev_max(new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx);
-//            if (currWord.index + dist > myNode.wanted_word.size())
-//                return;
+            int dist = lev_max(new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx, currWord.index - 1);
             if (dist <= myNode.approx) {
                 myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
             }

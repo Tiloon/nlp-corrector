@@ -17,10 +17,11 @@ void init_dist() {
     }
 }
 
-int lev_max(char* s1, size_t len1, const std::string &s2, int maxDist) {
+int lev_max(char* s1, size_t len1, const std::string &s2, int maxDist, int prevLen) {
     size_t len2 = s2.length();
+    prevLen = prevLen < 1 ? 1 : prevLen;
 
-    for (int i = 1; i <= len1; i++) {
+    for (int i = prevLen; i <= len1; i++) {
         int needToContinue = 0;
         for (int j = 1; j <= len2; j++) {
             int swapCost = s1[i - 1] == s2[j - 1] ? 0 : 1;
