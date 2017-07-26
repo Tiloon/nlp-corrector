@@ -40,14 +40,12 @@ void TrieNode::compute_offset() {
 
 //static std::vector<struct node>* outputVect = new std::vector<struct node>();
 
-char* get_son(char* ptr) {
-    std::string name = ptr;
-    return ptr + name.size() + 1 + sizeof (long) * 2;
+char *get_son(char *ptr, size_t len) {
+    return ptr + len + 1 + sizeof (long) * 2;
 }
 
-char* get_brother(char* start, char* ptr) {
-    std::string name = ptr;
-    long* next = (long*)(ptr + name.size() + 1 + sizeof (long));
+char *get_brother(char *start, char *ptr, size_t len) {
+    long* next = (long*)(ptr + len + 1 + sizeof (long));
     if (*next == 0)
         return "\0";
     return start + *next;
@@ -174,28 +172,30 @@ void TrieNode::draw(std::ofstream& file, int id) {
 }
 
 
-char *BinNode::g_son(char *ptr) {
-    return get_son(ptr);
+char *BinNode::g_son(char *ptr, size_t len) {
+    return get_son(ptr, len);
 }
 
-char *BinNode::g_brother(char *ptr) {
-    return get_brother(this->start, ptr);
+char *BinNode::g_brother(char *ptr, size_t len) {
+    return get_brother(this->start, ptr, len);
 }
 
 void resolveRec(std::string& currWord, char* curr, BinNode& myNode) {
     while (*curr != '\0') {
         int freq = get_freq(curr);
+        std::string new_word = std::string(currWord).append(curr);
         if (freq != 0) {
-            int dist = lev_max(std::string(currWord).append(curr), myNode.wanted_word, myNode.approx);
-//            int dist = lev(std::string(currWord).append(curr), myNode.wanted_word);
+            int dist = lev_max(new_word, myNode.wanted_word, myNode.approx);
+//            int dist = lev(new_word, myNode.wanted_word);
             if (dist <= myNode.approx)
-                myNode.out.insert(OutputElement(std::string(currWord).append(curr), freq, dist));
+                myNode.out.insert(OutputElement(new_word, freq, dist));
         }
         else if (currWord.size() > myNode.wanted_word.size() + myNode.approx)
             return;
-        char* first_son = get_son(curr);
-        resolveRec(std::string(currWord).append(curr), first_son, myNode);
-        curr = myNode.g_brother(curr);
+        size_t len = strlen(curr);
+        char* first_son = myNode.g_son(curr, len);
+        resolveRec(new_word, first_son, myNode);
+        curr = myNode.g_brother(curr, len);
     }
 }
 

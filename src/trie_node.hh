@@ -19,8 +19,8 @@ struct node {
     // next should be next son of the father, and next element sequentially should be the first son, 0 if no more
 };
 void * map_file(char *path);
-char* get_brother(char* start, char* ptr);
-char* get_son(char* ptr);
+char *get_brother(char *start, char *ptr, size_t i);
+char *get_son(char *ptr, size_t len);
 long get_freq(char* ptr);
 void resolve(char* ptr, std::string word, int approx);
 
@@ -35,8 +35,8 @@ public:
     BinNode(char *start, int max, int approx, std::string wanted_word, Output& output)
             : start(start), max(max), approx(approx),
               wanted_word(wanted_word), out(output) { }
-    char* g_son(char* ptr);
-    char* g_brother(char* ptr);
+    char *g_son(char *ptr, size_t len);
+    char *g_brother(char *ptr, size_t i);
 };
 
 class TrieNode {

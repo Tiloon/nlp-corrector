@@ -24,8 +24,8 @@ void print_all(char *ptr, char *curr, int depth) {
     if (*curr != '\0') {
         print_spaces(depth);
         std::cerr << curr << " " << get_freq(curr) << std::endl;
-        print_all(ptr, get_son(curr), depth + 1);
-        print_all(ptr, get_brother(ptr, curr), depth);
+        print_all(ptr, get_son(curr, 0), depth + 1);
+        print_all(ptr, get_brother(ptr, curr, 0), depth);
 //        print_spaces(depth);
 //        print_spaces(depth);
 //        std::cerr << "Visiting son" << std::endl;
@@ -84,7 +84,6 @@ int main(int argc, char** argv) {
         return 139;
     }
     write_bin(argv);
-
     return 0;
 }
 
