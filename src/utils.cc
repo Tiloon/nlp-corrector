@@ -10,16 +10,15 @@ inline static int min(int a, int b, int c) {
 
 static int dist[500][500];
 
+void init_dist() {
+    for (int i = 0; i < 500; i++) {
+        dist[i][0] = i;
+        dist[0][i] = i;
+    }
+}
+
 int lev_max(char* s1, size_t len1, const std::string &s2, int maxDist) {
     size_t len2 = s2.length();
-
-
-    for (int i = 0; i <= len1; i++) {
-        dist[i][0] = i;
-    }
-    for (int j = 0; j <= len2; j++) {
-        dist[0][j] = j;
-    }
 
     for (int i = 1; i <= len1; i++) {
         int needToContinue = 0;
