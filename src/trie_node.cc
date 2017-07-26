@@ -192,7 +192,7 @@ void resolveRec(std::string& currWord, char* curr, BinNode& myNode) {
                 myNode.out.insert(OutputElement(new_word, freq, dist));
             }
         }
-        else if (currWord.size() > myNode.wanted_word.size() + myNode.approx) {
+        if (currWord.size() > myNode.wanted_word.size() + myNode.approx) {
             return;
         }
         char* first_son = myNode.g_son(curr, len);
