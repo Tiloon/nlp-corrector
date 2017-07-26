@@ -3,15 +3,16 @@
 #include <iostream>
 #include "utils.hh"
 #include "output_element.hh"
+#include "trie_node.hh"
 
 inline static int min(int a, int b, int c) {
     return std::min(a, std::min(b, c));
 }
 
-static int dist[500][500];
+static int dist[WORD_MAX_SIZE][WORD_MAX_SIZE];
 
 void init_dist() {
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < WORD_MAX_SIZE; i++) {
         dist[i][0] = i;
         dist[0][i] = i;
     }

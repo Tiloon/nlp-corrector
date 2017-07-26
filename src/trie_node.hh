@@ -12,6 +12,8 @@
 #include <cstring>
 #include "output.hh"
 
+#define WORD_MAX_SIZE 256
+
 void * map_file(char *path);
 const char *get_brother(const char *start, const char *ptr, size_t i);
 const char *get_son(const char *ptr, size_t len);
@@ -19,7 +21,7 @@ long get_freq(const char* ptr, size_t len);
 void resolve(char* ptr, std::string word, int approx);
 long get_current_offset(long nodeSize);
 
-static char* word = (char *) calloc(500, 1);
+static char* word = (char *) calloc(WORD_MAX_SIZE, 1);
 
 class MyString {
 public:
