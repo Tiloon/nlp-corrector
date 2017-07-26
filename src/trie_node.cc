@@ -183,18 +183,21 @@ void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
         size_t len = strlen(curr);
         currWord.append(curr, len);
         MyString new_word = MyString(currWord.index + len);
-        if (new_word.index >= myNode.wanted_word.length() - myNode.approx // call lev earlier and kill tree if too bad
-            && new_word.index <= myNode.wanted_word.length() + myNode.approx) {
-            long freq = get_freq(curr, len);
-            if (freq != 0) {
-                int dist = lev_max(new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx, currWord.index - 1);
-                if (dist <= myNode.approx) {
-                    myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
+        if (new_word.index <= myNode.wanted_word.length() + myNode.approx) {
+            if (new_word.index >=
+                myNode.wanted_word.length() - myNode.approx) { // call lev earlier and kill tree if too bad
+                long freq = get_freq(curr, len);
+                if (freq != 0) {
+                    int dist = lev_max(new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx,
+                                       currWord.index - 1);
+                    if (dist <= myNode.approx) {
+                        myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
+                    }
                 }
             }
+            const char *first_son = myNode.g_son(curr, len);
+            resolveRec(new_word, first_son, myNode);
         }
-        const  char* first_son = myNode.g_son(curr, len);
-        resolveRec(new_word, first_son, myNode);
         curr = myNode.g_brother(curr, len);
     }
 }
