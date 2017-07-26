@@ -65,8 +65,9 @@ void write_bin(char *const *argv) {
     }
 //    root = (*root.sons_)[0];
     std::cerr << "Writing graph" << std::endl;
-    out_file1.write("\0", 1);
-    get_current_offset(1);
+    long size = 0;
+    out_file1.write((char *) &size, sizeof (long));
+    get_current_offset(sizeof (long));
     root.compute_offset_head();
     root.writeToBinaryFile(out_file1);
 //    dump_trie(root);

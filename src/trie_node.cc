@@ -28,10 +28,10 @@ void TrieNode::compute_offset_head() {
 }
 
 void TrieNode::compute_offset() {
-    offset_ = get_current_offset(prefix_.size() + 1 + 1 + sizeof (long) * 2)
-                              - (prefix_.size() + 1 + 1 + sizeof (long) * 2);
+    offset_ = get_current_offset(pad_this(prefix_.size() + 1) + sizeof (long) * 3)
+                              - (pad_this(prefix_.size() + 1) + sizeof (long) * 3);
     if (this->sons_->empty())
-        get_current_offset(1);
+        get_current_offset(sizeof (long));
     else
         for (auto& e : *this->sons_) {
             e.compute_offset();
@@ -39,15 +39,15 @@ void TrieNode::compute_offset() {
 }
 
 inline const char *get_son(const char *ptr, size_t len) {
-    return ptr + len + 1 + sizeof (long) * 2;
+    return ptr + pad_this(len + 1) + sizeof (long) * 2;
 }
 
 inline const char *get_brother(const char *start, const char *ptr, size_t len) {
-    return start + *(long*)(ptr + len + 1 + sizeof (long));
+    return start + *(long*)(ptr + pad_this(len + 1) + sizeof (long));
 }
 
 long get_freq(const char* ptr, size_t len) {
-    return *(long*)(ptr + len + 1);
+    return *(long*)(ptr + pad_this(len + 1));
 }
 
 void process_file(char* start, char *ptr) {
@@ -88,14 +88,15 @@ void* map_file(char *path) {
 
 void TrieNode::write_string(std::ofstream &of, TrieNode &son) const {
     // write size of string before, it's better than doing a strlen in App
-    char size = (char) son.prefix_.size();
-    of.write(&size, 1);
-    of.write((char*)son.prefix_.c_str(), son.prefix_.size() + 1); // TODO: remove this + 1
+    long size = (char) son.prefix_.size();
+    of.write((char *) &size, sizeof (long));
+    of.write((char*)son.prefix_.c_str(), pad_this(son.prefix_.length() + 1)); // TODO: remove this + 1
 }
 
 void TrieNode::writeToBinaryFile(std::ofstream &of) {
     if (this->sons_->empty()) {
-        of.write("\0", 1);
+        long size = 0;
+        of.write((char *) &size, sizeof (long));
         return;
     }
     for (int i = 0; i < this->sons_->size() - 1; ++i) {
@@ -111,7 +112,7 @@ void TrieNode::writeToBinaryFile(std::ofstream &of) {
     TrieNode& son = (*this->sons_)[this->sons_->size() - 1];
     write_string(of, son);
     of.write((char*)&son.freq_, sizeof(long));
-    long tmp = 0;
+    long tmp = 0; // no brother
     of.write((char*)&tmp, sizeof(long));
 
     son.writeToBinaryFile(of);
@@ -180,9 +181,9 @@ inline const char *BinNode::g_brother(const char *ptr, size_t len) {
 }
 
 void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
-    while (*curr != '\0') {
-        size_t len = (size_t) *curr;
-        curr = curr + 1;
+    while (*(long*)curr != 0l) {
+        long len = *(long*) curr;
+        curr = curr + sizeof (long);
         currWord.append(curr, len);
         MyString new_word = MyString(currWord.index + len);
         if (new_word.index <= myNode.wanted_word.length() + myNode.approx) {
@@ -210,6 +211,6 @@ void resolve(char* ptr, std::string word, int approx) {
     BinNode myNode = BinNode(ptr, max, approx, word, myOutput);
     MyString currWord = MyString();
 //    std::string currWord = "";
-    resolveRec(currWord, ptr + 1, myNode); // ptr + 1 because of first empty char
+    resolveRec(currWord, ptr + sizeof (long), myNode); // ptr + 1 because of first empty char
     myOutput.print_json();
 }

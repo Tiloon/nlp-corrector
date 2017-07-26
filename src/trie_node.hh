@@ -23,6 +23,10 @@ long get_current_offset(long nodeSize);
 
 static char* word = (char *) calloc(WORD_MAX_SIZE, 1); // TODO: can't this just be word[500] ?
 
+inline unsigned long pad_this(unsigned long num) {
+    return num + 4 - num % 4;
+}
+
 class MyString {
 public:
     size_t index;
