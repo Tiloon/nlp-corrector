@@ -3,8 +3,7 @@
 #include <sstream>
 #include "output.hh"
 #include "trie_node.hh"
-
-void write_bin(char *const *argv);
+#include "utils.hh"
 
 static void dump_trie(TrieNode& n) {
     std::ofstream myfile;
@@ -36,24 +35,6 @@ void print_all(char *ptr, char *curr, int depth) {
 //        print_spaces(depth);
 //        std::cerr << "Finished visiting brother" << std::endl;
     }
-}
-
-int main(int argc, char** argv) {
-    if (argc != 3) {
-        std::cout << "Usage: " << argv[0] << " /path/to/word/freq.txt /path/to/output/dict.bin" << std::endl;
-        return 139;
-    }
-    write_bin(argv);
-
-    char* ptr = (char*) map_file(argv[2]);
-    print_all(ptr, ptr, 0);
-    std::string toto = "hey";
-    std::string heyasta = std::string(toto).append("asta");
-    std::string tata = std::string(toto).append("ing");
-    resolve(ptr, "test", 3);
-
-    return 0;
-
 }
 
 void write_bin(char *const *argv) {
@@ -91,10 +72,26 @@ void write_bin(char *const *argv) {
     }
 //    root = (*root.sons_)[0];
     std::cerr << "Writing graph" << std::endl;
-    (*root.sons_)[0].computeOffset();
+    root.compute_offset_head();
     root.writeToBinaryFile(out_file1);
-    dump_trie(root);
+//    dump_trie(root);
     out_file1.close();
+}
+
+int main(int argc, char** argv) {
+    if (argc != 3) {
+        std::cout << "Usage: " << argv[0] << " /path/to/word/freq.txt /path/to/output/dict.bin" << std::endl;
+        return 139;
+    }
+//    write_bin(argv);
+
+    std::cerr << "Searching in graph" << std::endl;
+    char* ptr = (char*) map_file(argv[2]);
+//    print_all(ptr, ptr, 0);
+    resolve(ptr, "mamanana", 1);
+
+    return 0;
+
 }
 
 static TrieNode& test_trie() {

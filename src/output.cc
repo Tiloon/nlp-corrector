@@ -24,7 +24,7 @@ void Output::print_json() {
     if (it != this->data_.end()) {
         print_elt(*it);
         while (++it != this->data_.end()) {
-            std::cerr << ",\n";
+            std::cerr << ",";
             print_elt(*it);
         }
     }

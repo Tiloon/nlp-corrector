@@ -63,7 +63,8 @@ public:
             offset_(0)
     {}
 
-    void computeOffset();
+    void compute_offset();
+    void compute_offset_head();
     void insert(std::string word, int freq);
     std::string& get_prefix() { return prefix_; }
     void setWordEnd() { isWordEnd_ = 1; }

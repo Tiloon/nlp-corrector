@@ -21,14 +21,20 @@ static long get_current_offset(long nodeSize) {
     return offset;
 }
 
-void TrieNode::computeOffset() {
+void TrieNode::compute_offset_head() {
+    for (auto& e : *this->sons_) {
+        e.compute_offset();
+    }
+}
+
+void TrieNode::compute_offset() {
     offset_ = get_current_offset(prefix_.size() + 1 + sizeof (long) * 2) - (prefix_.size() + 1 + sizeof (long) * 2);
     if (this->sons_->empty())
 //        return;
         get_current_offset(1);
     else
         for (auto& e : *this->sons_) {
-            e.computeOffset();
+            e.compute_offset();
         }
 }
 
@@ -115,11 +121,11 @@ void TrieNode::writeToBinaryFile(std::ofstream &of) {
 }
 
 void TrieNode::insert(std::string word, int freq) {
-    std::cerr << "Insert |" << word << "| to node |" << prefix_ << "|" << std::endl;
+//    std::cerr << "Insert |" << word << "| to node |" << prefix_ << "|" << std::endl;
     if (!word.length()) {
-        std::cerr << "> Word end |" << prefix_ << "|" << std::endl;
+//        std::cerr << "> Word end |" << prefix_ << "|" << std::endl;
         freq_ = freq;
-        std::cerr << "> Word end |" << prefix_ << "|" <<  freq_ << std::endl;
+//        std::cerr << "> Word end |" << prefix_ << "|" <<  freq_ << std::endl;
 
         this->setWordEnd();
         return;
@@ -129,24 +135,24 @@ void TrieNode::insert(std::string word, int freq) {
         for(int i = 0; i < word.length(); i++) { // FIXME changer le sens de la boucle?
             std::string cutWord = word.substr(0, word.length() - i);  //word "abcd", cutWord "abc"
             if (cutWord.find(son.get_prefix()) == 0) { // ie: cutWord is "abc" and son is "ab"
-                std::cerr << "> Going inside son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
+//                std::cerr << "> Going inside son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
                 son.insert(word.substr(son.get_prefix().length()), freq);
                 return;
             }
             if (son.get_prefix().find(cutWord) == 0) { // ie: son is "abce" and cutWord is "abc"
-                std::cerr << "> Splitting son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
+//                std::cerr << "> Splitting son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
                 TrieNode n = TrieNode(cutWord, 0, 0);
                 n.sons_->push_back(son.removeFromPrefix(cutWord.length()));
                 this->sons_->erase(std::remove(this->sons_->begin(), this->sons_->end(), son), this->sons_->end());
                 n.insert(word.substr(cutWord.length()), freq);
                 this->sons_->push_back(n);
-                std::cerr << "> Word end2 |" << n.prefix_ << "|" <<  n.freq_ << std::endl;
+//                std::cerr << "> Word end2 |" << n.prefix_ << "|" <<  n.freq_ << std::endl;
 
                 return;
             }
         }
     }
-    std::cerr << "> New node |" << word << "| |" << prefix_ << "|" << std::endl;
+//    std::cerr << "> New node |" << word << "| |" << prefix_ << "|" << std::endl;
     this->sons_->emplace_back(word, 1, freq);
 }
 
@@ -178,9 +184,12 @@ char *BinNode::g_brother(char *ptr) {
 
 void resolveRec(std::string& currWord, char* curr, BinNode& myNode) {
     while (*curr != '\0') {
-        int dist = lev(std::string(currWord).append(curr), myNode.wanted_word);
-        if (dist <= myNode.approx)
-            myNode.out.insert(OutputElement(currWord, get_freq(curr), dist));
+        int freq = get_freq(curr);
+        if (freq != 0) {
+            int dist = lev_tmp(std::string(currWord).append(curr), myNode.wanted_word);
+            if (dist <= myNode.approx)
+                myNode.out.insert(OutputElement(currWord, freq, dist));
+        }
         else if (currWord.size() > myNode.wanted_word.size() + myNode.approx)
             return;
         char* first_son = get_son(curr);
