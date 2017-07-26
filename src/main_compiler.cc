@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstring>
 #include "output.hh"
 #include "trie_node.hh"
 #include "utils.hh"
@@ -23,9 +24,9 @@ void print_spaces(int depth) {
 void print_all(char *ptr, char *curr, int depth) {
     if (*curr != '\0') {
         print_spaces(depth);
-        std::cerr << curr << " " << get_freq(curr) << std::endl;
-        print_all(ptr, get_son(curr, 0), depth + 1);
-        print_all(ptr, get_brother(ptr, curr, 0), depth);
+        std::cerr << curr << " " << get_freq(curr, strlen(curr)) << std::endl;
+        print_all(ptr, get_son(curr, strlen(curr)), depth + 1);
+        print_all(ptr, get_brother(ptr, curr, strlen(curr)), depth);
 //        print_spaces(depth);
 //        print_spaces(depth);
 //        std::cerr << "Visiting son" << std::endl;

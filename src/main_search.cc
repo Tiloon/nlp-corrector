@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cstring>
 #include "output.hh"
 #include "trie_node.hh"
 #include "utils.hh"
@@ -14,9 +15,9 @@ void print_spaces(int depth) {
 void print_all(char *ptr, char *curr, int depth) {
     if (*curr != '\0') {
         print_spaces(depth);
-        std::cerr << curr << " " << get_freq(curr) << std::endl;
-        print_all(ptr, get_son(curr), depth + 1);
-        print_all(ptr, get_brother(ptr, curr), depth);
+        std::cerr << curr << " " << get_freq(curr, strlen(curr)) << std::endl;
+        print_all(ptr, get_son(curr, strlen(curr)), depth + 1);
+        print_all(ptr, get_brother(ptr, curr, strlen(curr)), depth);
 //        print_spaces(depth);
 //        print_spaces(depth);
 //        std::cerr << "Visiting son" << std::endl;
@@ -39,6 +40,7 @@ int main(int argc, char** argv) {
     std::cerr << "Load Trie" << std::endl;
     char* ptr = (char*) map_file(argv[1]);
 
+#if 0
     for (std::string line; std::getline(std::cin, line);) {
         std::string approx;
         std::string precision;
@@ -58,6 +60,12 @@ int main(int argc, char** argv) {
         search(ptr, word, stoi(precision));
 
     }
+#else
+    std::string precision = argv[2];
+    std::string word = argv[3];
+
+    search(ptr, word, stoi(precision));
+#endif
 
 //    search(ptr, "test", 1);
     return 0;

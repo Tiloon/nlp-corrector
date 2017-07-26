@@ -51,9 +51,8 @@ char *get_brother(char *start, char *ptr, size_t len) {
     return start + *next;
 }
 
-long get_freq(char* ptr) {
-    std::string name = ptr;
-    long* freq = (long*)(ptr + name.size() + 1);
+long get_freq(char* ptr, size_t len) {
+    long* freq = (long*)(ptr + len + 1);
     return *freq;
 }
 
@@ -163,9 +162,9 @@ void TrieNode::draw(std::ofstream& file, int id) {
     for (TrieNode& son : *(this->sons_)) {
         int id_next = id_builder();
         file << "node" << id << " [label=\"" << prefix_ << " (" << freq_ << ")" << "\", style=\"filled\", color=\"" <<
-                (isWordEnd_ ? "cadetblue" : "blue") << "\"]; node"
+        (isWordEnd_ ? "cadetblue" : "blue") << "\"]; node"
         << id_next << " [label=\"" << son.prefix_  << " (" << son.freq_ << ")" << " \", style=\"filled\", color=\"" <<
-                (son.isWordEnd_ ? "cadetblue" : "blue")
+        (son.isWordEnd_ ? "cadetblue" : "blue")
         <<"\"]; node" << id << "-> node" << id_next << "\n";
         son.draw(file, id_next);
     }
@@ -182,17 +181,20 @@ char *BinNode::g_brother(char *ptr, size_t len) {
 
 void resolveRec(std::string& currWord, char* curr, BinNode& myNode) {
     while (*curr != '\0') {
-        int freq = get_freq(curr);
-        std::string new_word = std::string(currWord).append(curr);
-        if (freq != 0) {
-            int dist = lev_max(new_word, myNode.wanted_word, myNode.approx);
-//            int dist = lev(new_word, myNode.wanted_word);
-            if (dist <= myNode.approx)
-                myNode.out.insert(OutputElement(new_word, freq, dist));
-        }
-        else if (currWord.size() > myNode.wanted_word.size() + myNode.approx)
-            return;
         size_t len = strlen(curr);
+        long freq = get_freq(curr, len);
+        std::string new_word = std::string(currWord).append(curr);
+        if (freq != 0/* && currWord.length() >= new_word.length() - myNode.approx - 1*/) {
+            int dist = lev_max(new_word, myNode.wanted_word, myNode.approx);
+//        if (dist + len > myNode.wanted_word.size())
+//            return;
+            if (dist <= myNode.approx) {
+                myNode.out.insert(OutputElement(new_word, freq, dist));
+            }
+        }
+        else if (currWord.size() > myNode.wanted_word.size() + myNode.approx) {
+            return;
+        }
         char* first_son = myNode.g_son(curr, len);
         resolveRec(new_word, first_son, myNode);
         curr = myNode.g_brother(curr, len);

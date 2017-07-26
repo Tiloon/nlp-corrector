@@ -15,19 +15,19 @@ void Output::insert(const OutputElement&& elt) {
 }
 
 static void print_elt(OutputElement elt) {
-    std::cerr << "{\"word\":\"" << elt.elt_ << "\",\"freq\":" << elt.freq_ << ",\"distance\":" << elt.dist_ << "}";
+    std::cout << "{\"word\":\"" << elt.elt_ << "\",\"freq\":" << elt.freq_ << ",\"distance\":" << elt.dist_ << "}";
 }
 
 void Output::print_json() {
-    std::cerr << "[";
+    std::cout << "[";
     std::set<OutputElement>::iterator it = this->data_.begin();
     if (it != this->data_.end()) {
         print_elt(*it);
         while (++it != this->data_.end()) {
-            std::cerr << ",";
+            std::cout << ",";
             print_elt(*it);
         }
     }
-    std::cerr << "]";
+    std::cout << "]";
 }
 

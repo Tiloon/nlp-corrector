@@ -21,7 +21,7 @@ struct node {
 void * map_file(char *path);
 char *get_brother(char *start, char *ptr, size_t i);
 char *get_son(char *ptr, size_t len);
-long get_freq(char* ptr);
+long get_freq(char* ptr, size_t len);
 void resolve(char* ptr, std::string word, int approx);
 
 class BinNode {
