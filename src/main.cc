@@ -93,7 +93,7 @@ void write_bin(char *const *argv) {
     std::cerr << "Writing graph" << std::endl;
     (*root.sons_)[0].computeOffset();
     root.writeToBinaryFile(out_file1);
-//    dump_trie(root);
+    dump_trie(root);
     out_file1.close();
 }
 

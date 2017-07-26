@@ -30,7 +30,7 @@ public:
     int approx;
     int max;
     std::string wanted_word;
-    Output out;
+    Output& out;
 
     BinNode(char *start, int max, int approx, std::string wanted_word, Output& output)
             : start(start), max(max), approx(approx),

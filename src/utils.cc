@@ -20,6 +20,7 @@ static int min(int a, int b, int c)
 
 int lev(const std::string& str1, const std::string& str2)
 {
+  std::cerr << str1 << std::endl;
   int len1 = str1.size();
   int len2 = str2.size();
   int d[len2 * 2 + 1];
