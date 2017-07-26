@@ -52,8 +52,7 @@ inline const char *get_brother(const char *start, const char *ptr, size_t len) {
 }
 
 long get_freq(const char* ptr, size_t len) {
-    long* freq = (long*)(ptr + len + 1);
-    return *freq;
+    return *(long*)(ptr + len + 1);
 }
 
 void process_file(char* start, char *ptr) {
@@ -182,17 +181,18 @@ inline const char *BinNode::g_brother(const char *ptr, size_t len) {
 void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
     while (*curr != '\0') {
         size_t len = strlen(curr);
-        long freq = get_freq(curr, len);
         currWord.append(curr, len);
         MyString new_word = MyString(currWord.index + len);
-        if (freq != 0 && myNode.wanted_word.length() >= new_word.index - myNode.approx) {
-            int dist = lev_max(new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx, currWord.index - 1);
-            if (dist <= myNode.approx) {
-                myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
+        if (new_word.index >= myNode.wanted_word.length() - myNode.approx // call lev earlier and kill tree if too bad
+            && new_word.index <= myNode.wanted_word.length() + myNode.approx) {
+            long freq = get_freq(curr, len);
+            if (freq != 0) {
+                int dist = lev_max(new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx, currWord.index - 1);
+                if (dist <= myNode.approx) {
+                    myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
+                }
             }
         }
-        if (currWord.index > myNode.wanted_word.size() + myNode.approx)
-            return;
         const  char* first_son = myNode.g_son(curr, len);
         resolveRec(new_word, first_son, myNode);
         curr = myNode.g_brother(curr, len);
