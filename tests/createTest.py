@@ -14,7 +14,7 @@ def createTest(fileName, nbWord, approx, lines):
 
 with open(DICT) as f:
     lines = f.readlines()
-    for approx in range(0, 4):
+    for approx in range(0, 3):
         for nb in [10, 30, 100, 300, 1000, 3000]:
             print('rand_' + str(nb) + '_' + str(approx) + '.txt')
             createTest('rand_' + str(nb) + '_' + str(approx) + '.txt', nb, approx, lines)

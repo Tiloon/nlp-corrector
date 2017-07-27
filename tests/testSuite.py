@@ -14,7 +14,7 @@ DICT = '../ref/words.txt'
 REF_DICT_BIN = '../ref/dict.bin'
 DICT_BIN = 'dict.bin'
 
-TESTS_DIR = './tests_files'
+TESTS_DIR = './tests_files/'
 
 FNULL = open(os.devnull, 'w')
 
@@ -25,6 +25,7 @@ def okko(test):
 
 def test_memory(process):
     ru = os.wait4(process.pid, 0)[2]
+
     if (ru.ru_maxrss / 1024) > 512:
         print(">> Maximum used memory: %d" % (ru.ru_maxrss / 1024), 'Mo', okko((ru.ru_maxrss / 1024) < 512))
     return ru.ru_maxrss / 1024
@@ -32,10 +33,12 @@ def test_memory(process):
 def test_comp():
     print('## COMPILER ##')
     start = time.time()
-    p = Popen(['/usr/bin/time', '-v', COMP_BIN_PATH, DICT, DICT_BIN],  # ['/usr/bin/time', '-v', 'ls'],
-                           stdout=PIPE, stderr=PIPE)
+    p = Popen([COMP_BIN_PATH, DICT, DICT_BIN], stdout=PIPE, stderr=PIPE)
     test_memory(p)
     print(">> Took: " + str(round(time.time() - start, 3)) + "s")
+    p = Popen([REF_COMP_BIN_PATH, DICT, REF_DICT_BIN], stdout=PIPE, stderr=PIPE)
+    p.wait()
+
 
 
 def search(filename, bin, dict_bin):
@@ -47,6 +50,10 @@ def search(filename, bin, dict_bin):
     timeUsed = round(time.time() - start, 3)
     _, err = ps.communicate()
     output, _ = ps2.communicate()
+    if len(output) == 0:
+        print('?? Warning: No output?')
+        print("?? Cmd was: ", ' '.join(['cat', filename]), '|', ' '.join([bin, dict_bin]))
+
     # print(">> Took: " + str(timeUsed) + "s")
     return output.decode('utf-8'), timeUsed, memUsed
 
@@ -90,6 +97,9 @@ def test_search():
     print('\n#########\n# RECAP #\n#########')
     print('>> Passed test:', passedTest, '/', totalTest, '(', 100 * passedTest // totalTest, '%)')
     print('>> Memory passed test:', memoryGoodTest, '/', totalTest, '(', 100 * memoryGoodTest // totalTest, '%)')
+    print('>> Total Time analysis: Ref', round(refTimeSum, 3), 's | Ours',
+          round(mineTimeSum, 3),
+          's | Difference', round(diffTimeSum, 3), 's')
     print('>> Average Time analysis: Ref', round(refTimeSum / totalTest, 3), 's | Ours', round(mineTimeSum / totalTest, 3),
           's | Difference', round(diffTimeSum / totalTest, 3), 's | Ratio perf ', round(percentTimeSum / totalTest, 2))
 
