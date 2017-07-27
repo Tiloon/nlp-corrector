@@ -88,7 +88,10 @@ void* map_file(char *path) {
 
 void TrieNode::write_string(std::ofstream &of, TrieNode &son) const {
     // write size of string before, it's better than doing a strlen in App
-    char size = (char) son.prefix_.size();
+
+//    if (son.prefix_.length() > 128)
+//        std::cerr << "wtf";
+    char size = (unsigned char) son.prefix_.size();
     of.write(&size, 1);
     of.write((char*)son.prefix_.c_str(), son.prefix_.size() + 1); // TODO: remove this + 1
 }
@@ -186,17 +189,19 @@ inline const char *BinNode::go_to(size_t len) {
 
 void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
     while (true) {
-        size_t len = (size_t) *curr;
+        size_t len = (size_t) (unsigned char) *curr; // (int) (unsigned char) (curr) = 133
         curr = curr + 1;
         currWord.append(curr, len);
         MyString new_word = MyString(currWord.index + len);
         if (new_word.index <= myNode.wanted_word.length() + myNode.approx) {
-            if (new_word.index >=
-                myNode.wanted_word.length() - myNode.approx) { // call lev earlier and kill tree if too bad
+            if (new_word.index >= myNode.wanted_word.length() - myNode.approx) { // call lev earlier and kill tree if too bad
                 long freq = get_freq(curr, len);
                 if (freq != 0) {
                     int dist = lev_max(new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx,
                                        currWord.index - 1);
+//                    if (dist == -1) {
+//                        goto after_son;
+//                    }
                     if (dist <= myNode.approx) {
                         myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
                     }
@@ -206,6 +211,7 @@ void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
             if (*first_son != '\0')
                 resolveRec(new_word, first_son, myNode);
         }
+//        after_son:
         long next_pos = *(long*)(curr + len + 1 + sizeof (long));
         if (next_pos == 0l)
             return;

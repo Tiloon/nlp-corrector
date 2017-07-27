@@ -12,7 +12,7 @@
 #include <cstring>
 #include "output.hh"
 
-#define WORD_MAX_SIZE 256
+#define WORD_MAX_SIZE 500
 
 void * map_file(char *path);
 const char *get_brother(const char *start, const char *ptr, size_t i);
@@ -35,6 +35,7 @@ public:
         return word;
     }
     inline void append(const char* str, size_t len) {
+//        std::cerr << str << std::endl;
         memcpy(word + index, str, len);
     }
 };
