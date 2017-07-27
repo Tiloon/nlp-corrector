@@ -20,16 +20,15 @@ void init_dist() {
     }
 }
 
-int lev_max(const char* s1, size_t len1, const std::string& s2, int maxDist, int prevLen) {
+int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& s2, int maxDist) {
     size_t len2 = s2.length();
-    prevLen = prevLen < 1 ? 1 : prevLen;
-    prevLen = 1;
-    for (int i = prevLen; i <= len1; i++) {
-//        stock[i] = 0;
-        for (int j = 1; j <= len2; j++) {
+    for (int i = new_word.computed_index; i <= len1; i++) {
+        int swapCost = s1[i - 1] == s2[0] ? 0 : 1;
+        dist[i][1] = min(dist[i - 1][1] + 1, dist[i][0] + 1, dist[i - 1][0] + swapCost);
+        for (int j = 2; j <= len2; j++) {
             int swapCost = s1[i - 1] == s2[j - 1] ? 0 : 1;
             dist[i][j] = min(dist[i - 1][j] + 1, dist[i][j - 1] + 1, dist[i - 1][j - 1] + swapCost);
-            if (i > 1 && j > 1 && s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) {
+            if (i > 1 && s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) {
                 dist[i][j] = std::min(dist[i][j], dist[i - 2][j - 2] + swapCost);
             }
         }
@@ -38,13 +37,10 @@ int lev_max(const char* s1, size_t len1, const std::string& s2, int maxDist, int
             if (dist[i][j] <= maxDist)
                 break;
         if (j == len2 + 1) {
-            return maxDist + 1;
+            new_word.computed_index = i;
+            return -1;
         }
-//            stock[i] = 1;
-        }
-//    }
-//    int i = len1;
-//    if (i >= 2 && stock[i] && stock[i - 1] && stock[i - 2])
-//        return -1;
+    }
+    new_word.computed_index = (int) len1;
     return dist[len1][len2];
 }

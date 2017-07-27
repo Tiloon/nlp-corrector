@@ -192,16 +192,15 @@ void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
         size_t len = (size_t) (unsigned char) *curr; // (int) (unsigned char) (curr) = 133
         curr = curr + 1;
         currWord.append(curr, len);
-        MyString new_word = MyString(currWord.index + len);
+        MyString new_word = MyString(currWord.index + len, currWord.computed_index);
         if (new_word.index <= myNode.wanted_word.length() + myNode.approx) {
             if (new_word.index >= myNode.wanted_word.length() - myNode.approx) { // call lev earlier and kill tree if too bad
                 long freq = get_freq(curr, len);
                 if (freq != 0) {
-                    int dist = lev_max(new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx,
-                                       currWord.index - 1);
-//                    if (dist == -1) {
-//                        goto after_son;
-//                    }
+                    int dist = lev_max(new_word, new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx);
+                    if (dist == -1) {
+                        goto after_son;
+                    }
                     if (dist <= myNode.approx) {
                         myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
                     }
@@ -211,7 +210,7 @@ void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
             if (*first_son != '\0')
                 resolveRec(new_word, first_son, myNode);
         }
-//        after_son:
+        after_son:
         long next_pos = *(long*)(curr + len + 1 + sizeof (long));
         if (next_pos == 0l)
             return;
