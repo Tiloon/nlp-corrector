@@ -29,7 +29,7 @@ void TrieNode::compute_offset_head() {
 
 void TrieNode::compute_offset() {
     offset_ = get_current_offset(prefix_.size() + 1 + 1 + sizeof (long) * 2)
-                              - (prefix_.size() + 1 + 1 + sizeof (long) * 2);
+              - (prefix_.size() + 1 + 1 + sizeof (long) * 2);
     if (this->sons_->empty())
         get_current_offset(1);
     else
@@ -179,8 +179,13 @@ inline const char *BinNode::g_brother(const char *ptr, size_t len) {
     return get_brother(this->start, ptr, len);
 }
 
+inline const char *BinNode::go_to(size_t len) {
+    return start + len;
+}
+
+
 void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
-    while (*curr != '\0') {
+    while (true) {
         size_t len = (size_t) *curr;
         curr = curr + 1;
         currWord.append(curr, len);
@@ -198,9 +203,13 @@ void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
                 }
             }
             const char *first_son = myNode.g_son(curr, len);
-            resolveRec(new_word, first_son, myNode);
+            if (*first_son != '\0')
+                resolveRec(new_word, first_son, myNode);
         }
-        curr = myNode.g_brother(curr, len);
+        long next_pos = *(long*)(curr + len + 1 + sizeof (long));
+        if (next_pos == 0l)
+            return;
+        curr = myNode.go_to(next_pos);
     }
 }
 

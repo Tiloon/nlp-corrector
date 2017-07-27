@@ -52,6 +52,7 @@ public:
               wanted_word(wanted_word), out(output) { }
     const char *g_son(const char *ptr, size_t len);
     const char *g_brother(const char *ptr, size_t i);
+    const char *go_to(size_t len);
 };
 
 class TrieNode {
