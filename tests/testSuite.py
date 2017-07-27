@@ -59,7 +59,7 @@ def test_search():
 
     refTimeSum, mineTimeSum, diffTimeSum, percentTimeSum = 0, 0, 0, 0
 
-    files = [TESTS_DIR + f for f in os.listdir(TESTS_DIR) if os.path.isfile(os.path.join('./tests_files', f))]
+    files = [TESTS_DIR + f for f in os.listdir(TESTS_DIR) if os.path.isfile(os.path.join(TESTS_DIR, f))]
     for filename in files:
         if filename[-4:] != '.txt':
             continue
@@ -71,23 +71,27 @@ def test_search():
             memoryGoodTest += 1
 
         outRef, timeRef, _ = search(filename, REF_APP_BIN_PATH, REF_DICT_BIN)
-        # print(outRef)
         if outRef != outMine:
             print('!! Diff with ref: ', okko(outRef == outMine))
+            print('!!!!!!!!!!!!!!!!!!!!!!!Our!!!!!!!!!!!!!!!!!!!!!!!')
+            print(outMine)
+            print('!!!!!!!!!!!!!!!!!!!!!!!Ref!!!!!!!!!!!!!!!!!!!!!!!')
+            print(outRef)
+
         else:
             passedTest += 1
         refTimeSum += timeRef
         mineTimeSum += timeMine
         diffTimeSum += round(timeMine - timeRef, 3)
-        percentTimeSum += round(timeMine / timeRef, 2) * 100
+        percentTimeSum += round(timeMine / timeRef, 2)
         print('>> Time analysis: Ref', timeRef, 's | Ours', timeMine, 's | Difference',
-              round(timeMine - timeRef, 3), 's | Percent perf', round(timeMine / timeRef, 2) * 100, '%')
+              round(timeMine - timeRef, 3), 's | Ratio perf', round(timeMine / timeRef, 2))
 
     print('\n#########\n# RECAP #\n#########')
     print('>> Passed test:', passedTest, '/', totalTest, '(', 100 * passedTest // totalTest, '%)')
     print('>> Memory passed test:', memoryGoodTest, '/', totalTest, '(', 100 * memoryGoodTest // totalTest, '%)')
     print('>> Average Time analysis: Ref', round(refTimeSum / totalTest, 3), 's | Ours', round(mineTimeSum / totalTest, 3),
-          's | Difference', round(diffTimeSum / totalTest, 3), 's | Percent perf', round(percentTimeSum / totalTest, 2), '%')
+          's | Difference', round(diffTimeSum / totalTest, 3), 's | Ratio perf ', round(percentTimeSum / totalTest, 2))
 
 # test_comp()
 test_search()
