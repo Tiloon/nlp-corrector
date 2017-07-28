@@ -14,7 +14,10 @@
 
 
 
-
+/**
+ * \brief Compute the current offset
+ * \param nodeSize the size of the node
+ */
 long get_current_offset(long nodeSize);
 
 

@@ -120,11 +120,6 @@ int main(int argc, char** argv) {
         std::getline(iss, word, ' ');
         std::cerr << approx << " " << precision << " " << word << std::endl;
 
-//        if (approx.compare("approx")) {
-//            std::cerr << "Approx expected" << std::endl;
-//            continue;
-//        }
-
         search(ptr, word, stoi(precision));
     }
 #else
