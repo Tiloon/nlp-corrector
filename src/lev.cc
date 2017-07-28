@@ -1,7 +1,7 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
-#include "utils.hh"
+#include "lev.hh"
 #include "output_element.hh"
 #include "trie_node.hh"
 

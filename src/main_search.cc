@@ -4,7 +4,7 @@
 #include <cstring>
 #include "output.hh"
 #include "trie_node.hh"
-#include "utils.hh"
+#include "lev.hh"
 
 
 void print_spaces(int depth) {

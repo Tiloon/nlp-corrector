@@ -11,7 +11,7 @@
 #include <err.h>
 #include <cstring>
 #include "trie_node.hh"
-#include "utils.hh"
+#include "lev.hh"
 #include "output.hh"
 // 00 => 10
 
