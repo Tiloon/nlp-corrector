@@ -16,8 +16,8 @@ REF_DICT_BIN = '../ref/dict.bin'
 DICT_BIN = 'dict.bin'
 
 TESTS_DIR = './tests_files/'
-# TESTS_EXT = '.txt'
-TESTS_EXT = '1000_0.txt'
+TESTS_EXT = '.txt'
+# TESTS_EXT = '30_2.txt'
 
 LOG_FILE =  './logs.txt'
 REF_LOG_FILE = './ref_logs.txt'

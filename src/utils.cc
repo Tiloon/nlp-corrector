@@ -22,6 +22,7 @@ void init_dist() {
 }
 
 int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& s2, int maxDist) {
+//    std::cerr << s1 << std::endl;
     size_t len2 = s2.length();
     for (int i = new_word.computed_index; i <= len1; i++) {
         int swapCost = s1[i - 1] == s2[0] ? 0 : 1;
@@ -44,6 +45,19 @@ int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& 
         }
     }
     new_word.computed_index = (int) len1;
+
+//    if (len2 == len1 + 1) {
+//        int lastLineMinDist = 10000;
+//        for (int j = 1; j <= len2; j++)
+//            if (dist[len1][j] < lastLineMinDist)
+//                lastLineMinDist = dist[len1][j];
+//
+//        if (lastLineMinDist >= maxDist && s2[len1] != s1[len1 - 1]) { //we cant swap last elt, going to son is useless
+//            return -1;
+//        }
+//    }
+
+
     return dist[len1][len2];
 }
 

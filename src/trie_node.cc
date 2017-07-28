@@ -194,8 +194,7 @@ void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {
         currWord.append(curr, len);
         MyString new_word = MyString(currWord.index + len, currWord.computed_index);
         if (new_word.index <= myNode.wanted_word.length() + myNode.approx) {
-            if (new_word.index >=
-                myNode.wanted_word.length() - myNode.approx) { // call lev earlier and kill tree if too bad
+            if (new_word.index <= myNode.approx + 1 || new_word.index >= myNode.wanted_word.length() - myNode.approx) { // call lev earlier and kill tree if too bad
                 long freq = get_freq(curr, len);
                 if (freq != 0) {
                     int dist = lev_max(new_word, new_word.get_string(), new_word.index, myNode.wanted_word,
