@@ -7,28 +7,6 @@
 #include "lev.hh"
 
 
-void print_spaces(int depth) {
-    for (int i = 0; i < depth * 2; ++i)
-        std::cerr << " ";
-}
-
-/*void print_all(const char *ptr, const char *curr, int depth) {
-    if (*curr != '\0') {
-        print_spaces(depth);
-        std::cerr << curr << " " << get_freq(curr, strlen(curr)) << std::endl;
-        print_all(ptr, get_son(curr, strlen(curr)), depth + 1);
-        print_all(ptr, get_brother(ptr, curr, strlen(curr)), depth);
-//        print_spaces(depth);
-//        print_spaces(depth);
-//        std::cerr << "Visiting son" << std::endl;
-//        std::cerr << "Finished visiting son" << std::endl;
-//        print_spaces(depth);
-//        std::cerr << "Visiting brother" << std::endl;
-//        print_spaces(depth);
-//        std::cerr << "Finished visiting brother" << std::endl;
-    }
-}*/
-
 
 void search(char* ptr, std::string word, int dist) {
     std::cerr << "Search: |" << word << "| Dist=" << dist << std::endl;

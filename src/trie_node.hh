@@ -51,24 +51,7 @@ public:
     }
 };
 
-class BinNode {
-    char *start;
-public:
-    int approx;
-    int max;
-    std::string wanted_word;
-    Output &out;
 
-    BinNode(char *start, int max, int approx, std::string wanted_word, Output &output)
-            : start(start), max(max), approx(approx),
-              wanted_word(wanted_word), out(output) { }
-
-    const char *g_son(const char *ptr, size_t len);
-
-    const char *g_brother(const char *ptr, size_t i);
-
-    const char *go_to(size_t len);
-};
 
 /**
  * \class TrieNode

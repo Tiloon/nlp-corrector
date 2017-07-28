@@ -1,4 +1,7 @@
 //
+#include "bin_node.hh"
+#include "trie_node.hh"
+
 
 #include <algorithm>
 #include <iostream>
@@ -10,10 +13,9 @@
 #include <fcntl.h>
 #include <err.h>
 #include <cstring>
-#include "trie_node.hh"
 #include "lev.hh"
 #include "output.hh"
-// 00 => 10
+
 
 long get_current_offset(long nodeSize) {
     static long offset = 0;
@@ -38,13 +40,7 @@ void TrieNode::compute_offset() {
         }
 }
 
-inline const char *get_son(const char *ptr, size_t len) {
-    return ptr + len + 1 + sizeof(long) * 2;
-}
 
-inline const char *get_brother(const char *start, const char *ptr, size_t len) {
-    return start + *(long *) (ptr + len + 1 + sizeof(long));
-}
 
 long get_freq(const char *ptr, size_t len) {
     return *(long *) (ptr + len + 1);
@@ -82,7 +78,6 @@ void *map_file(char *path) {
     if ((ptr = mmap(NULL, stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
         err(EXIT_FAILURE, "%s", path);
 
-//    std::cerr << ptr << std::endl;
     return ptr;
 }
 
@@ -127,20 +122,20 @@ void TrieNode::insert(std::string word, int freq) {
         freq_ = freq;
 //        std::cerr << "> Word end |" << prefix_ << "|" <<  freq_ << std::endl;
 
-        this->setWordEnd();
+        this->isWordEnd_ = 1;
         return;
     }
 
     for (TrieNode &son : *(this->sons_)) {
         for (int i = 0; i < word.length(); i++) { // FIXME changer le sens de la boucle?
             std::string cutWord = word.substr(0, word.length() - i);  //word "abcd", cutWord "abc"
-            if (cutWord.find(son.get_prefix()) == 0) { // ie: cutWord is "abc" and son is "ab"
-//                std::cerr << "> Going inside son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
-                son.insert(word.substr(son.get_prefix().length()), freq);
+            if (cutWord.find(son.prefix_) == 0) { // ie: cutWord is "abc" and son is "ab"
+//                std::cerr << "> Going inside son |" << son.prefix_ << "| with cutWord |" << cutWord << "|" << std::endl;
+                son.insert(word.substr(son.prefix_.length()), freq);
                 return;
             }
-            if (son.get_prefix().find(cutWord) == 0) { // ie: son is "abce" and cutWord is "abc"
-//                std::cerr << "> Splitting son |" << son.get_prefix() << "| with cutWord |" << cutWord << "|" << std::endl;
+            if (son.prefix_.find(cutWord) == 0) { // ie: son is "abce" and cutWord is "abc"
+//                std::cerr << "> Splitting son |" << son.prefix_ << "| with cutWord |" << cutWord << "|" << std::endl;
                 TrieNode n = TrieNode(cutWord, 0, 0);
                 n.sons_->push_back(son.removeFromPrefix(cutWord.length()));
                 this->sons_->erase(std::remove(this->sons_->begin(), this->sons_->end(), son), this->sons_->end());
@@ -174,17 +169,6 @@ void TrieNode::draw(std::ofstream &file, int id) {
 }
 
 
-inline const char *BinNode::g_son(const char *ptr, size_t len) {
-    return get_son(ptr, len);
-}
-
-inline const char *BinNode::g_brother(const char *ptr, size_t len) {
-    return get_brother(this->start, ptr, len);
-}
-
-inline const char *BinNode::go_to(size_t len) {
-    return start + len;
-}
 
 
 void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {

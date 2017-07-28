@@ -4,7 +4,6 @@
 #include <cstring>
 #include "output.hh"
 #include "trie_node.hh"
-#include "lev.hh"
 
 static void dump_trie(TrieNode& n) {
     std::ofstream myfile;
