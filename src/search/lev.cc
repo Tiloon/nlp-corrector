@@ -39,11 +39,11 @@ int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& 
             if (dist[i][j] <= maxDist)
                 break;
         if (j == len2 + 1) {
-            new_word.computed_index = i;
+            new_word.computed_index = i + 1;
             return -1;
         }
     }
-    new_word.computed_index = (int) len1;
+    new_word.computed_index = (int) len1 + 1;
 
 //    if (len2 == len1 + 1) {
 //        int lastLineMinDist = 10000;
