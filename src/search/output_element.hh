@@ -7,14 +7,28 @@
 
 #include <string>
 
+
+/**
+ * \class OutputElement
+ * \brief Represent a object to print
+ */
 class OutputElement {
 public:
-    const std::string elt_;
-    long freq_;
-    int dist_;
+    const std::string elt_; /*!< The word */
+    long freq_; /*!< The word frequency */
+    int dist_; /*!< The word distance with the searched word */
 
+    /**
+     * \brief Constructor
+     * \param elt The word
+     * \param freq The word frequency
+     * \param dist The word distance with the searched word
+     */
     OutputElement(const std::string &elt, long freq, int dist) : elt_(elt), freq_(freq), dist_(dist) { }
 
+    /**
+     * Comparaison used to sort tge OutputElement before printing them
+     */
     bool operator<(const OutputElement& other) const
     {
         if (dist_ != other.dist_)
