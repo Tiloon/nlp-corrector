@@ -217,12 +217,46 @@ void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
     }
 }
 
+void resolveRecZero(MyString currWord, const char* curr, BinNode& myNode) {
+    while (true) {
+        size_t len = (size_t) (unsigned char) *curr; // (int) (unsigned char) (curr) = 133
+        curr = curr + 1;
+        currWord.append(curr, len);
+        MyString new_word = MyString(currWord.index + len, currWord.computed_index);
+        if (new_word.index <= myNode.wanted_word.length() + myNode.approx) {
+            if (new_word.index >= myNode.wanted_word.length() - myNode.approx) { // call lev earlier and kill tree if too bad
+                long freq = get_freq(curr, len);
+                if (freq != 0) {
+                    int dist = lev_zero(new_word, new_word.get_string(), new_word.index, myNode.wanted_word);
+                    if (dist == 1) {
+                        myNode.out.insert(OutputElement(new_word.get_string(), freq, 0));
+                        return;
+                    }
+                    if (dist == -1)
+                        goto after_son;
+                }
+            }
+            const char *first_son = myNode.g_son(curr, len);
+            if (*first_son != '\0')
+                resolveRec(new_word, first_son, myNode);
+        }
+        after_son:
+        long next_pos = *(long*)(curr + len + 1 + sizeof (long));
+        if (next_pos == 0l)
+            return;
+        curr = myNode.go_to(next_pos);
+    }
+}
+
 void resolve(char* ptr, std::string word, int approx) {
     int max = (int) (word.size() + approx);
     auto myOutput = Output();
     BinNode myNode = BinNode(ptr, max, approx, word, myOutput);
     MyString currWord = MyString();
-//    std::string currWord = "";
-    resolveRec(currWord, ptr + 1, myNode); // ptr + 1 because of first empty char
+    if (approx == 0)
+        resolveRecZero(currWord, ptr + 1, myNode);
+    else
+        resolveRec(currWord, ptr + 1, myNode); // ptr + 1 because of first empty char
     myOutput.print_json();
 }
+

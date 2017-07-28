@@ -47,6 +47,18 @@ int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& 
     return dist[len1][len2];
 }
 
+
+int lev_zero(MyString& new_word, const char* s1, size_t len1, const std::string& s2) {
+    size_t len2 = s2.length();
+    if (len1 > len2)
+        return -1;
+    for (int i = new_word.computed_index; i <= len1; i++) {
+        if (s1[i] != s2[i])
+            return -1;
+    }
+    return len1 == len2 ? 1 : 0;
+}
+
 /*int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& s2, int maxDist) {
     size_t len2 = s2.length();
     if (new_word.computed_index == 1 && len1 > 0) { // unrolling of first element
