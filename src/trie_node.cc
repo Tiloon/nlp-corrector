@@ -198,9 +198,8 @@ void resolveRec(MyString currWord, const char* curr, BinNode& myNode) {
                 long freq = get_freq(curr, len);
                 if (freq != 0) {
                     int dist = lev_max(new_word, new_word.get_string(), new_word.index, myNode.wanted_word, myNode.approx);
-                    if (dist == -1) {
+                    if (dist == -1)
                         goto after_son;
-                    }
                     if (dist <= myNode.approx) {
                         myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
                     }

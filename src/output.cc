@@ -6,10 +6,6 @@
 #include "output_element.hh"
 #include "output.hh"
 
-void Output::insert(const OutputElement& elt) {
-    this->data_.insert(elt);
-}
-
 void Output::insert(const OutputElement&& elt) {
     this->data_.insert(elt);
 }

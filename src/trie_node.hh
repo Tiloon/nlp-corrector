@@ -12,7 +12,7 @@
 #include <cstring>
 #include "output.hh"
 
-#define WORD_MAX_SIZE 500
+#define WORD_MAX_SIZE 512
 
 void * map_file(char *path);
 const char *get_brother(const char *start, const char *ptr, size_t i);
