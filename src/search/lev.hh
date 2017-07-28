@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
-#include "trie_node.hh"
+#include "MyString.hh"
+
 /**
  * \file lev.hh
  * \brief Contains everything related to Damerau-Levenshtein distance

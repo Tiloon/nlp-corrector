@@ -10,46 +10,14 @@
 #include <vector>
 #include <memory>
 #include <cstring>
-#include "output.hh"
+#include "../search/output.hh"
 
-#define WORD_MAX_SIZE 512
 
-void *map_file(char *path);
 
-const char *get_brother(const char *start, const char *ptr, size_t i);
-
-const char *get_son(const char *ptr, size_t len);
-
-long get_freq(const char *ptr, size_t len);
-
-void resolve(char *ptr, std::string word, int approx);
 
 long get_current_offset(long nodeSize);
 
-static char *word = (char *) calloc(WORD_MAX_SIZE, 1); // TODO: can't this just be word[500] ?
 
-class MyString {
-public:
-    size_t index;
-    int computed_index;
-
-    MyString() {
-        index = 0;
-        computed_index = 1;
-    }
-
-    MyString(size_t index, int computed_index) : index(index), computed_index(computed_index) { }
-
-    inline char *get_string() {
-        word[index] = '\0';
-        return word;
-    }
-
-    inline void append(const char *str, size_t len) {
-//        std::cerr << str << std::endl;
-        memcpy(word + index, str, len);
-    }
-};
 
 
 

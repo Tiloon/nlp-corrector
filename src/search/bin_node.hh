@@ -9,6 +9,11 @@
 #include <string>
 #include "output.hh"
 
+
+const char *get_brother(const char *start, const char *ptr, size_t i);
+
+const char *get_son(const char *ptr, size_t len);
+
 class BinNode {
     char *start;
 public:

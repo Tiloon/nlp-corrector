@@ -1,20 +1,14 @@
 //
-#include "bin_node.hh"
 #include "trie_node.hh"
-
 
 #include <algorithm>
 #include <iostream>
 #include "trie_node.hh"
 #include <iostream>
 #include <fstream>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <err.h>
+
 #include <cstring>
-#include "lev.hh"
-#include "output.hh"
+
 
 
 long get_current_offset(long nodeSize) {
@@ -42,44 +36,6 @@ void TrieNode::compute_offset() {
 
 
 
-long get_freq(const char *ptr, size_t len) {
-    return *(long *) (ptr + len + 1);
-}
-
-void process_file(char *start, char *ptr) {
-    while (true) {
-//        struct node *n = (struct node *) ptr;
-        std::string name = ptr;
-        if (name.empty()) {
-            break;
-        }
-        long *freq = (long *) (ptr + name.size() + 1);
-        long *next = (long *) (ptr + name.size() + 1 + sizeof(long));
-        std::cerr << name << std::endl;
-        std::cerr << *freq << std::endl;
-        std::cerr << *next << std::endl;
-//        if (*next != 0)
-//            process_file(start, start + *next); // iterate on this son
-        ptr = ptr + name.size() + 2 + sizeof(long) * 2;
-    }
-}
-
-void *map_file(char *path) {
-    int fd;
-    struct stat stat;
-    void *ptr;
-
-    if ((fd = open(path, O_RDONLY)) < 0)
-        err(EXIT_FAILURE, "%s", path);
-
-    if (fstat(fd, &stat) != 0)
-        err(EXIT_FAILURE, "%s", path);
-
-    if ((ptr = mmap(NULL, stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
-        err(EXIT_FAILURE, "%s", path);
-
-    return ptr;
-}
 
 void TrieNode::write_string(std::ofstream &of, TrieNode &son) const {
     // write size of string before, it's better than doing a strlen in App
@@ -171,71 +127,5 @@ void TrieNode::draw(std::ofstream &file, int id) {
 
 
 
-void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {
-    while (true) {
-        size_t len = (size_t) (unsigned char) *curr;
-        curr = curr + 1;
-        currWord.append(curr, len);
-        MyString new_word = MyString(currWord.index + len, currWord.computed_index);
-        if (new_word.index <= myNode.wanted_word.length() + myNode.approx) {
-            if (new_word.index <= myNode.approx + 1 || new_word.index >= myNode.wanted_word.length() - myNode.approx) { // call lev earlier and kill tree if too bad
-                long freq = get_freq(curr, len);
-                if (freq != 0) {
-                    int dist = lev_max(new_word, new_word.get_string(), new_word.index, myNode.wanted_word,
-                                       myNode.approx);
-                    if (dist == -1)
-                        goto after_son; // current branch is bad, skip the sons
-                    if (dist <= myNode.approx) {
-                        myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
-                    }
-                }
-            }
-            const char *first_son = myNode.g_son(curr, len);
-            if (*first_son != '\0')
-                resolveRec(new_word, first_son, myNode);
-        }
-        after_son:
-        long next_pos = *(long *) (curr + len + 1 + sizeof(long));
-        if (next_pos == 0l)
-            return;
-        curr = myNode.go_to(next_pos);
-    }
-}
 
-void resolveRecZero(MyString currWord, const char *curr, BinNode &myNode) {
-    while (true) {
-        size_t len = (size_t) (unsigned char) *curr; // (int) (unsigned char) (curr) = 133
-        curr = curr + 1;
-        currWord.append(curr, len);
-        MyString new_word = MyString(currWord.index + len, currWord.computed_index);
-        long freq = get_freq(curr, len);
-        int dist = lev_zero(new_word, new_word.get_string(), new_word.index, myNode.wanted_word);
-        if (freq != 0 && dist == 1) { //we found it
-            myNode.out.insert(OutputElement(new_word.get_string(), freq, 0));
-            return;
-        }
-
-        if (dist != -1) { // dont match, go to brother
-            const char *first_son = myNode.g_son(curr, len);
-            if (*first_son != '\0')
-                resolveRecZero(new_word, first_son, myNode);
-        }
-        long next_pos = *(long *) (curr + len + 1 + sizeof(long));
-        if (next_pos == 0l)
-            return;
-        curr = myNode.go_to(next_pos);
-    }
-}
-
-void resolve(char *ptr, std::string word, int approx) {
-    int max = (int) (word.size() + approx);
-    auto myOutput = Output();
-    BinNode myNode = BinNode(ptr, max, approx, word, myOutput);
-    MyString currWord = MyString();
-    if (approx == 0)
-        resolveRecZero(currWord, ptr + 1, myNode);
-    else
-        resolveRec(currWord, ptr + 1, myNode); // ptr + 1 because of first empty char
-    myOutput.print_json();
-}
 

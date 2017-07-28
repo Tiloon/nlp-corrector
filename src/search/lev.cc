@@ -3,7 +3,6 @@
 #include <iostream>
 #include "lev.hh"
 #include "output_element.hh"
-#include "trie_node.hh"
 
 inline static int min(int a, int b, int c) {
     return std::min(a, std::min(b, c));

@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstring>
-#include "output.hh"
+#include "../search/output.hh"
 #include "trie_node.hh"
 
 static void dump_trie(TrieNode& n) {
