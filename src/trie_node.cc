@@ -189,7 +189,7 @@ inline const char *BinNode::go_to(size_t len) {
 
 void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {
     while (true) {
-        size_t len = (size_t) (unsigned char) *curr; // (int) (unsigned char) (curr) = 133
+        size_t len = (size_t) (unsigned char) *curr;
         curr = curr + 1;
         currWord.append(curr, len);
         MyString new_word = MyString(currWord.index + len, currWord.computed_index);
@@ -201,7 +201,7 @@ void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {
                     int dist = lev_max(new_word, new_word.get_string(), new_word.index, myNode.wanted_word,
                                        myNode.approx);
                     if (dist == -1)
-                        goto after_son;
+                        goto after_son; // current branch is bad, skip the sons
                     if (dist <= myNode.approx) {
                         myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
                     }
