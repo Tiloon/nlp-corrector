@@ -10,7 +10,6 @@ def createTest(fileName, nbWord, approx, lines):
         for w in words:
             f.write('approx ' + str(approx) + ' ' + w + '\n')
 
-    # with open(TESTS_DIR + fileName, 'w+'):
 
 with open(DICT) as f:
     lines = f.readlines()

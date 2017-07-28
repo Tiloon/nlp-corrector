@@ -1,3 +1,4 @@
+import filecmp
 import os
 import subprocess
 from subprocess import Popen, PIPE
@@ -15,7 +16,11 @@ REF_DICT_BIN = '../ref/dict.bin'
 DICT_BIN = 'dict.bin'
 
 TESTS_DIR = './tests_files/'
+TESTS_EXT = '.txt'
+# TESTS_EXT = '100_0.txt'
 
+LOG_FILE =  './logs.txt'
+REF_LOG_FILE = './ref_logs.txt'
 FNULL = open(os.devnull, 'w')
 
 
@@ -41,21 +46,22 @@ def test_comp():
 
 
 
-def search(filename, bin, dict_bin):
-    start = time.time()
-    ps = subprocess.Popen(['cat', filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    ps2 = subprocess.Popen([bin, dict_bin], stdin=ps.stdout, stdout=subprocess.PIPE, stderr=FNULL)
-    ps.wait()
-    memUsed = test_memory(ps2)
-    timeUsed = round(time.time() - start, 3)
-    _, err = ps.communicate()
-    output, _ = ps2.communicate()
-    if len(output) == 0:
-        print('?? Warning: No output?')
-        print("?? Cmd was: ", ' '.join(['cat', filename]), '|', ' '.join([bin, dict_bin]))
+def search(filename, bin, dict_bin, log_file):
+    with open(log_file, 'w+') as f:
+        start = time.time()
+        ps = subprocess.Popen(['cat', filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ps2 = subprocess.Popen([bin, dict_bin], stdin=ps.stdout, stdout=f, stderr=FNULL)
+        ps.wait()
+        memUsed = test_memory(ps2)
+        timeUsed = round(time.time() - start, 3)
+        # _, err = ps.communicate()
+        # output, _ = ps2.communicate()
+        # if len(output) == 0:
+        #     print('?? Warning: No output?')
+        #     print("?? Cmd was: ", ' '.join(['cat', filename]), '|', ' '.join([bin, dict_bin]))
 
-    # print(">> Took: " + str(timeUsed) + "s")
-    return output.decode('utf-8'), timeUsed, memUsed
+        # print(">> Took: " + str(timeUsed) + "s")
+    return timeUsed, memUsed
 
 
 def test_search():
@@ -68,22 +74,26 @@ def test_search():
 
     files = [TESTS_DIR + f for f in os.listdir(TESTS_DIR) if os.path.isfile(os.path.join(TESTS_DIR, f))]
     for filename in files:
-        if filename[-4:] != '.txt':
+        if filename[-len(TESTS_EXT):] != TESTS_EXT:
             continue
         totalTest += 1
         print('# File: ', filename)
 
-        outMine, timeMine, memUsed = search(filename, APP_BIN_PATH, DICT_BIN)
+        timeMine, memUsed = search(filename, APP_BIN_PATH, DICT_BIN, LOG_FILE)
         if memUsed < 512:
             memoryGoodTest += 1
 
-        outRef, timeRef, _ = search(filename, REF_APP_BIN_PATH, REF_DICT_BIN)
-        if outRef != outMine:
-            print('!! Diff with ref: ', okko(outRef == outMine))
+        timeRef, _ = search(filename, REF_APP_BIN_PATH, REF_DICT_BIN, REF_LOG_FILE)
+
+        filecmp.clear_cache()
+        if not filecmp.cmp(LOG_FILE, REF_LOG_FILE):
+            print('!! Diff with ref:')
             print('!!!!!!!!!!!!!!!!!!!!!!!Our!!!!!!!!!!!!!!!!!!!!!!!')
-            print(outMine)
+            with open(LOG_FILE, 'r') as f:
+                print(f.read())
             print('!!!!!!!!!!!!!!!!!!!!!!!Ref!!!!!!!!!!!!!!!!!!!!!!!')
-            print(outRef)
+            with open(REF_LOG_FILE, 'r') as f:
+                print(f.read())
 
         else:
             passedTest += 1
@@ -103,5 +113,7 @@ def test_search():
     print('>> Average Time analysis: Ref', round(refTimeSum / totalTest, 3), 's | Ours', round(mineTimeSum / totalTest, 3),
           's | Difference', round(diffTimeSum / totalTest, 3), 's | Ratio perf ', round(percentTimeSum / totalTest, 2))
 
-# test_comp()
+
+if not os.path.isfile('./' + DICT_BIN):
+    test_comp()
 test_search()
