@@ -44,17 +44,16 @@ App
 3) Design choices
 =================
 
-We picked the C++ as language for its speed, because we knew that performancies will be the major part of the
-project. We chosed it over the C because the STL already implements some usefull data structures and algorithm, but
+We picked the C++ language for its speed, because we knew that performances will be the major part of the
+project. We chose it over C because the STL already implements some useful data structures and algorithms, but
 as you may notice by reading the source code, most of the time, we used mostly C, especially to be efficient with
 the memory manipulation.
 
 Compiler
 --------
-The compiler read line by line the dictionary and create a compressed trie to store the words and their frequency.
-Once the trie is built, it is serialized in a file. We wrote in the file the son near to their parents because we
-knew in the app we will do a DFS on our trie. We hoped to reduce cache miss this way. We also aligned our data on 4
-bytes to improve performances.
+The compiler reads line by line the dictionary and creates a compressed trie to store the words and their frequency.
+Once the trie is built, it is serialized in a file. We wrote in the file the son near their parent because we
+knew that in the app we will do a DFS on our trie. We hoped to reduce cache misses this way.
 
 App
 ---
@@ -68,11 +67,11 @@ Otherwise, we compute the edition distance on the first row of nodes of the trie
 Once we picked the branch, we only compute the distance in the word of range [len(requested word) +/- approximation
 allowed].
 
-Of course the Damerau-Levenshtein distance si memoized. The matrix where we store the computation is shared to
+Of course the Damerau-Levenshtein distance is memoized. The matrix where we store the computation is shared to
 avoid to compute the rows computed by the fathers of the current node.
 
 We used profiling tools, the critic part of the code (the ones which is called on almost every node of the trie) is
-optimized. We unrolled some for-loops, factorized as much as we could tests...
+optimized. We unrolled some for-loops, factorized as much as we could...
 
 
 4) Tests
@@ -91,7 +90,7 @@ Benchmark
 The script will start by compiling the trie in the "test" directory. If there already is a compiled trie, it will
 skip this step. The script check the used memory by the compiler.
 
-Then, it will use all the file which match "tests/test_files/*.txt" to test the app. For each test, the output is
+Then, it will use all the files which match "tests/test_files/*.txt" to test the app. For each test, the output is
 compared with the ref, the memory usage is checked, and record some timestamp. If a test fail, the output from both
 the ref and our app is dumped. At the end, a recap with the passed and failed tests is display, as well as some stats
 on the time used by the binaries.
@@ -132,12 +131,12 @@ useless memory jumps.
 ===============================
 We could only take a string in parameter, and guess the distance threshold. To do this, we could have a requested
 number of approximated words to find, start with a threshold of 0 and increase it until we reached the number of
-word. We could also stop when we reach a threshold which is larger than half the length of the word for instance.
+word. We could also stop when we reach a threshold larger than half the length of the word for instance.
 
 
 8) Possible improvements
 ========================
-We should have add a bloom filter to increase the response speed with an approximation of 0. We could avoid
+We should have added a bloom filter to increase the response speed with an approximation of 0. We could avoid
 searching for words we are sure are not in the trie.
 
 9) State-of-the-art
