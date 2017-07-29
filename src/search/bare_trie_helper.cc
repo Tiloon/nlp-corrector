@@ -14,24 +14,6 @@ long get_freq(const char *ptr, size_t len) {
     return *(long *) (ptr + len + 1);
 }
 
-//void process_file(char *start, char *ptr) {
-//    while (true) {
-////        struct node *n = (struct node *) ptr;
-//        std::string name = ptr;
-//        if (name.empty()) {
-//            break;
-//        }
-//        long *freq = (long *) (ptr + name.size() + 1);
-//        long *next = (long *) (ptr + name.size() + 1 + sizeof(long));
-//        std::cerr << name << std::endl;
-//        std::cerr << *freq << std::endl;
-//        std::cerr << *next << std::endl;
-////        if (*next != 0)
-////            process_file(start, start + *next); // iterate on this son
-//        ptr = ptr + name.size() + 2 + sizeof(long) * 2;
-//    }
-//}
-
 void *map_file(char *path) {
     int fd;
     struct stat stat;

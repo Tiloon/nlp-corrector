@@ -7,6 +7,7 @@
 #include "bin_node.hh"
 #include "bare_trie_helper.hh"
 
+//FIXME: Doc
 inline const char *get_son(const char *ptr, size_t len) {
     return ptr + len + 1 + sizeof(long) * 2;
 }
@@ -27,6 +28,13 @@ inline const char *BinNode::go_to(size_t len) {
     return start + len;
 }
 
+
+/**
+ * \brief Search the word in the trie recursively in the case of the maximum distance is not 0
+ * \param currWord The word built by appending his fathers
+ * \param curr The current node in the mmap'ed zone with the trie
+ * \param myNode
+ */
 void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {
     while (true) {
         size_t len = (size_t) (unsigned char) *curr;
@@ -58,6 +66,12 @@ void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {
     }
 }
 
+/**
+ * \brief Search the word in the trie recursively in the case of the maximum distance is 0
+ * \param currWord The word built by appending his fathers
+ * \param curr The current node in the mmap'ed zone with the trie
+ * \param myNode
+ */
 void resolveRecZero(MyString currWord, const char *curr, BinNode &myNode) {
     while (true) {
         size_t len = (size_t) (unsigned char) *curr; // (int) (unsigned char) (curr) = 133
@@ -83,6 +97,12 @@ void resolveRecZero(MyString currWord, const char *curr, BinNode &myNode) {
     }
 }
 
+/**
+ * \brief Search the word in the trie and print the results
+ * \param ptr The mmap'ed zone with the trie
+ * \param word The searched word
+ * \param dist The maximum edition distance allowed
+ */
 void resolve(char *ptr, std::string word, int approx) {
     int max = (int) (word.size() + approx);
     auto myOutput = Output();
@@ -96,7 +116,12 @@ void resolve(char *ptr, std::string word, int approx) {
 }
 
 
-
+/**
+ * \brief Search the word in the trie and print the results
+ * \param ptr The mmap'ed zone with the trie
+ * \param word The searched word
+ * \param dist The maximum edition distance allowed
+ */
 void search(char* ptr, std::string word, int dist) {
     std::cerr << "Search: |" << word << "| Dist=" << dist << std::endl;
     resolve(ptr, word, dist);

@@ -9,6 +9,8 @@
 #include <string>
 #include "output.hh"
 
+//FIXME : Doc
+
 
 const char *get_brother(const char *start, const char *ptr, size_t i);
 
