@@ -2,6 +2,159 @@
                           xX_TypoDestoyer3000_Xx
                           ======================
 
-FIXME :(
 
- dot -Tpng ./Debug/trie.dot -o OutputFile.png && feh OutputFile.png
+1) Build
+========
+
+Executables
+-----------
+> cmake .
+> make
+
+It will build both the compiler (TextMiningCompiler) and the app (TextMiningApp).
+
+Documentation
+-------------
+(You will need doxygen)
+
+> make doc
+
+You can find the built doc in the "doc" directory.
+
+
+
+2) Use
+======
+
+Compiler
+--------
+> ./TextMiningCompiler <path_to_dict> <path_to_compiled_trie>
+
+The dict must use the following format (where 42 is "word" frequency):
+> word\t42\n
+
+App
+---
+> echo "approx 0 test" | ./TextMiningApp <path_to_compiled_trie>
+> echo "approx 0 test\napprox 2 test" | ./TextMiningApp <path_to_compiled_trie>
+> cat test.txt | ./TextMiningApp <path_to_compiled_trie>
+
+
+
+3) Design choices
+=================
+
+We picked the C++ as language for its speed, because we knew that performancies will be the major part of the
+project. We chosed it over the C because the STL already implements some usefull data structures and algorithm, but
+as you may notice by reading the source code, most of the time, we used mostly C, especially to be efficient with
+the memory manipulation.
+
+Compiler
+--------
+The compiler read line by line the dictionary and create a compressed trie to store the words and their frequency.
+Once the trie is built, it is serialized in a file. We wrote in the file the son near to their parents because we
+knew in the app we will do a DFS on our trie. We hoped to reduce cache miss this way. We also aligned our data on 4
+bytes to improve performances.
+
+App
+---
+We only mmap the file in the memory to be efficient, we don't bind it to C++ class, and read directly on the
+allocated page. We tried to avoid as much as possible the data copy.
+
+We have a special treatment if the requested distance is 0, we don't compute a costful edition distance, but we
+do a custom strcmp.
+
+Otherwise, we compute the edition distance on the first row of nodes of the trie to pick the branches to test.
+Once we picked the branch, we only compute the distance in the word of range [len(requested word) +/- approximation
+allowed].
+
+Of course the Damerau-Levenshtein distance si memoized. The matrix where we store the computation is shared to
+avoid to compute the rows computed by the fathers of the current node.
+
+We used profiling tools, the critic part of the code (the ones which is called on almost every node of the trie) is
+optimized. We unrolled some for-loops, factorized as much as we could tests...
+
+
+4) Tests
+========
+The tests scripts shall be launched in the "tests" directory if you expect any results other than an error.
+
+Test creator
+------------
+This quick'n'dirty will build test files for the app, by picking random words among the first 100k
+words from the dictionary. It build test with different number of word & different approximations.
+
+> python3 createTest.py
+
+Benchmark
+---------
+The script will start by compiling the trie in the "test" directory. If there already is a compiled trie, it will
+skip this step. The script check the used memory by the compiler.
+
+Then, it will use all the file which match "tests/test_files/*.txt" to test the app. For each test, the output is
+compared with the ref, the memory usage is checked, and record some timestamp. If a test fail, the output from both
+the ref and our app is dumped. At the end, a recap with the passed and failed tests is display, as well as some stats
+on the time used by the binaries.
+
+> python3 testSuite.py
+
+The script expect the folowing architecture for the ref (where "dict.bin" as been built by the ref compiler):
+tests
+├── ...
+ref
+├── bin
+│   └── linux64
+│       ├── TextMiningApp
+│       └── TextMiningCompiler
+├── dict.bin
+└── words.txt
+
+
+
+5) Correction by distance fails
+===============================
+We did not notice any special fails. Unlike the ref (which fails quickly as the requested distance grow), we
+handle really large distance edition thresholds.
+
+
+6) Data structure used
+======================
+As mentioned before, we used a compressed trie to store our data. The trie data structure was designed exactly for
+our used case: store words with common prefix in an efficient way. Also, the trie allowed us to optimized our
+edition distance computation by reusing the results of the father of the node.
+
+We chose to use a compress trie instead of the "basic" one to reduce the number of the nodes of the trie. It also
+allows us to avoid degenerated branch which are basically a linked list (especially far from the root), and so to
+useless memory jumps.
+
+
+7) Automatic distance threshold
+===============================
+We could only take a string in parameter, and guess the distance threshold. To do this, we could have a requested
+number of approximated words to find, start with a threshold of 0 and increase it until we reached the number of
+word. We could also stop when we reach a threshold which is larger than half the length of the word for instance.
+
+
+8) Possible improvements
+========================
+We should have add a bloom filter to increase the response speed with an approximation of 0. We could avoid
+searching for words we are sure are not in the trie.
+
+9) State-of-the-art
+===================
+To make our app a state-of-the-art spell checker, we should:
+- Change the weights in the edition distance. Swap two letters or replace a letter with another which is close on
+a keyboard shall cost less.
+- Learn new words on run time. Actually, you need to recompile the trie to add a new word.
+- Learn user habits. People usually do the same mistakes, we could learn from them and store the correction in a
+more accessible place than in the trie. We could also changed the word frequency depending on the user habits.
+
+
+10) Bonus
+=========
+The compiler can generate image with the graph of the trie. It create the graph with the dot format. Uncomment
+the "dump_trie" line in the main. Do not try with too large dictionary, or dot will fail to generate the image
+due to the amount of node.
+
+To create the image from the dot file:
+> dot -Tpng ./trie.dot -o trie.png
