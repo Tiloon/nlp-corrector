@@ -8,6 +8,19 @@ inline static int min(int a, int b, int c) {
     return std::min(a, std::min(b, c));
 }
 
+inline static int least(int a, int b, int c)
+{
+    __asm__ (
+    "cmp     %0, %1\n\t"
+            "cmovle  %1, %0\n\t"
+            "cmp     %0, %2\n\t"
+            "cmovle  %2, %0\n\t"
+    : "+r"(a) :
+    "%r"(b), "r"(c)
+    );
+    return a;
+}
+
 static int **dist;
 //static int dist[WORD_MAX_SIZE][WORD_MAX_SIZE];
 
@@ -25,10 +38,10 @@ int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& 
     size_t len2 = s2.length();
     for (int i = new_word.computed_index; i <= len1; ++i) {
         int swapCost = s1[i - 1] == s2[0] ? 0 : 1;
-        dist[i][1] = min(dist[i - 1][1] + 1, dist[i][0] + 1, dist[i - 1][0] + swapCost);
+        dist[i][1] = least(dist[i - 1][1] + 1, dist[i][0] + 1, dist[i - 1][0] + swapCost);
         for (int j = 2; j <= len2; ++j) {
             int swapCost = s1[i - 1] == s2[j - 1] ? 0 : 1;
-            dist[i][j] = min(dist[i - 1][j] + 1, dist[i][j - 1] + 1, dist[i - 1][j - 1] + swapCost);
+            dist[i][j] = least(dist[i - 1][j] + 1, dist[i][j - 1] + 1, dist[i - 1][j - 1] + swapCost);
             if (i > 1) // optimized by compiler
                 if (s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) {
                     dist[i][j] = std::min(dist[i][j], dist[i - 2][j - 2] + swapCost);

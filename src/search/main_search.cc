@@ -133,7 +133,7 @@ int main(int argc, char** argv) {
     char* ptr = (char*) map_file(argv[1]);
     init_dist();
 
-#if 0
+#if 1
     for (std::string line; std::getline(std::cin, line);) {
         std::string approx;
         std::string precision;
