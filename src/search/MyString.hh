@@ -1,9 +1,10 @@
-//
-// Created by hugo on 29/07/17.
-//
-
 #ifndef NLP_CORRECTOR_MYSTRING_HH
 #define NLP_CORRECTOR_MYSTRING_HH
+
+/**
+ * \file MyString.hh
+ * \brief Contains the class used to handle strings in the trie
+ */
 
 #include <cstring>
 #define WORD_MAX_SIZE 512

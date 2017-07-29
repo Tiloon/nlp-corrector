@@ -1,7 +1,3 @@
-//
-// Created by hugo on 29/07/17.
-//
-
 #include <cstring>
 #include "bare_trie_helper.hh"
 #include <sys/stat.h>
@@ -9,10 +5,6 @@
 #include <fcntl.h>
 #include <err.h>
 #include <cstdlib>
-
-long get_freq(const char *ptr, size_t len) {
-    return *(long *) (ptr + len + 1);
-}
 
 void *map_file(char *path) {
     int fd;

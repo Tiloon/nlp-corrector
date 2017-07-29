@@ -1,9 +1,10 @@
-//
-// Created by tilon on 23/07/17.
-//
-
 #ifndef NLP_CORRECTOR_OUTPUT_HH
 #define NLP_CORRECTOR_OUTPUT_HH
+
+/**
+ * \file output.hh
+ * \brief Contains the class used to handle the output
+ */
 
 #include <set>
 #include <memory>

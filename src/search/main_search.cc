@@ -8,10 +8,20 @@
 #include "bare_trie_helper.hh"
 
 //FIXME: Doc
+
+
+void resolveRec(MyString currWord, const char *curr, BinNode &myNode) ;
+
+inline long get_freq(const char *ptr, size_t len) {
+    return *(long *) (ptr + len + 1);
+}
+
+// kill
 inline const char *get_son(const char *ptr, size_t len) {
     return ptr + len + 1 + sizeof(long) * 2;
 }
 
+// kill
 inline const char *get_brother(const char *start, const char *ptr, size_t len) {
     return start + *(long *) (ptr + len + 1 + sizeof(long));
 }
@@ -42,16 +52,14 @@ void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {
         currWord.append(curr, len);
         MyString new_word = MyString(currWord.index + len, currWord.computed_index);
         if (new_word.index <= myNode.wanted_word.length() + myNode.approx) {
-            if (new_word.index >= myNode.wanted_word.length() - myNode.approx || new_word.index == myNode.approx + 1) { // call lev earlier and kill tree if too bad
-                long freq = get_freq(curr, len);
-                if (freq != 0) {
-                    int dist = lev_max(new_word, new_word.get_string(), new_word.index, myNode.wanted_word,
-                                       myNode.approx);
-                    if (dist == -1)
-                        goto after_son; // current branch is bad, skip the sons
-                    if (dist <= myNode.approx) {
-                        myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
-                    }
+            long freq = get_freq(curr, len);
+            if (freq != 0) {
+                int dist = lev_max(new_word, new_word.get_string(), new_word.index, myNode.wanted_word,
+                                   myNode.approx);
+                if (dist == -1)
+                    goto after_son; // current branch is bad, skip the sons
+                if (dist <= myNode.approx) {
+                    myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));
                 }
             }
             const char *first_son = myNode.g_son(curr, len);
