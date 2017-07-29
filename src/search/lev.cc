@@ -23,10 +23,10 @@ void init_dist() {
 int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& s2, int maxDist) {
 //    std::cerr << s1 << std::endl;
     size_t len2 = s2.length();
-    for (int i = new_word.computed_index; i <= len1; i++) {
+    for (int i = new_word.computed_index; i <= len1; ++i) {
         int swapCost = s1[i - 1] == s2[0] ? 0 : 1;
         dist[i][1] = min(dist[i - 1][1] + 1, dist[i][0] + 1, dist[i - 1][0] + swapCost);
-        for (int j = 2; j <= len2; j++) {
+        for (int j = 2; j <= len2; ++j) {
             int swapCost = s1[i - 1] == s2[j - 1] ? 0 : 1;
             dist[i][j] = min(dist[i - 1][j] + 1, dist[i][j - 1] + 1, dist[i - 1][j - 1] + swapCost);
             if (i > 1) // optimized by compiler
@@ -35,7 +35,7 @@ int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& 
                 }
         }
         int j; // stop compute if dist is too big
-        for (j = 1; j <= len2; j++)
+        for (j = 1; j <= len2; ++j)
             if (dist[i][j] <= maxDist)
                 break;
         if (j == len2 + 1) {
