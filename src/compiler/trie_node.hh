@@ -1,10 +1,10 @@
-//
-// Created by hugo on 23/07/17.
-//
-
 #ifndef NLP_CORRECTOR_TRIENODE_HH
 #define NLP_CORRECTOR_TRIENODE_HH
 
+/**
+ * \file trie_node.hh
+ * \brief Contains everything related to trie
+ */
 
 #include <string>
 #include <vector>
