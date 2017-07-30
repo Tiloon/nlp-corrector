@@ -87,6 +87,8 @@ words from the dictionary. It build test with different number of word & differe
 
 Benchmark
 ---------
+To use the test suite, your must first create a ref directory at the root of the project as described after.
+
 The script will start by compiling the trie in the "test" directory. If there already is a compiled trie, it will
 skip this step. The script check the used memory by the compiler.
 
@@ -97,7 +99,7 @@ on the time used by the binaries.
 
 > python3 testSuite.py
 
-The script expect the folowing architecture for the ref (where "dict.bin" as been built by the ref compiler):
+The script expects the folowing architecture for the ref (where "dict.bin" as been built by the ref compiler):
 tests
 ├── ...
 ref
@@ -107,8 +109,6 @@ ref
 │       └── TextMiningCompiler
 ├── dict.bin
 └── words.txt
-
-
 
 5) Correction by distance fails
 ===============================

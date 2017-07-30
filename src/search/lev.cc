@@ -33,7 +33,6 @@ void init_dist() {
 }
 
 int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& s2, int maxDist) {
-//    std::cerr << s1 << std::endl;
     size_t len2 = s2.length();
     for (int i = new_word.computed_index; i <= len1; ++i) {
         int swapCost = s1[i - 1] == s2[0] ? 0 : 1;
