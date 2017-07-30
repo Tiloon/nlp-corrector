@@ -23,8 +23,6 @@ public:
      */
     Output() : data_(std::set<OutputElement>()) { }
 
-    void insert(const OutputElement& elt);
-
     /**
      * \brief Add an OutputElement to the set
      * \param elt The element to add

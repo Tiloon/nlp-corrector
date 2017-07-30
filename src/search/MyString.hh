@@ -10,7 +10,8 @@
 #define WORD_MAX_SIZE 512
 
 
-static char *word = (char *) calloc(WORD_MAX_SIZE, 1); // TODO: can't this just be word[500] ?
+static char word[WORD_MAX_SIZE] = {0};
+//static char *word = (char *) calloc(WORD_MAX_SIZE, 1); // TODO: can't this just be word[500] ?
 
 
 /**

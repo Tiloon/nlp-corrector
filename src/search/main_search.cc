@@ -44,7 +44,7 @@ void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {
             if (freq != 0) {
                 int dist = lev_max(new_word, new_word.get_string(), new_word.index, myNode.wanted_word,
                                    myNode.approx);
-                if (dist == -1) // TODO: here to if and else, and dupicate code to stop with the goto?
+                if (dist == -1)
                     goto after_son; // current branch is bad, skip the sons
                 if (dist <= myNode.approx) {
                     myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));

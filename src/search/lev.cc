@@ -21,7 +21,6 @@ inline static int least(int a, int b, int c)
     return a;
 }
 
-static int **dist;
 //static int dist[WORD_MAX_SIZE][WORD_MAX_SIZE];
 
 void init_dist() {

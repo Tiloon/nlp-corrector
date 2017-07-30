@@ -8,7 +8,6 @@
 
 #include <string>
 
-
 /**
  * \class OutputElement
  * \brief Represent a object to print

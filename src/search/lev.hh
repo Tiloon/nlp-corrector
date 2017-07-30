@@ -7,6 +7,8 @@
  * \brief Contains everything related to Damerau-Levenshtein distance
  */
 
+static int **dist;
+
 /**
  * \fn int lev_max(MyString& new_word, const char* s1, size_t len1, const std::string& s2, int maxDist)
  * \brief Compute the new lines for Damerau-Levenshtein distance
