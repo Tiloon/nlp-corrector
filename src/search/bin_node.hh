@@ -18,29 +18,6 @@
  */
 long get_freq(const char *ptr, size_t len);
 
-/**
- * \fn const char *get_brother(const char *start, const char *ptr, size_t len);
- * \brief Compute the position of the brother of the given node
- *
- * \param start The pointer to the start of the maped binary filed
- * \param ptr The pointer to the current node
- * \param len The length of the word of the current node
- *
- * \return Return a pointer to the position of the brother of the given node
- */
-const char *get_brother(const char *start, const char *ptr, size_t len);
-
-/**
- * \fn const char *get_son(const char *ptr, size_t len);
- * \brief Compute the position of the son of the given node
- *
- * \param ptr The pointer to the current node
- * \param len The length of the word of the current node
- *
- * \return Return a pointer to the position of the son of the given node
- */
-const char *get_son(const char *ptr, size_t len);
-
 
 /**
  * \class BinNode

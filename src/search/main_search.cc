@@ -10,28 +10,16 @@
 //FIXME: Doc
 
 
-void resolveRec(MyString currWord, const char *curr, BinNode &myNode) ;
-
 inline long get_freq(const char *ptr, size_t len) {
     return *(long *) (ptr + len + 1);
 }
 
-// kill
-inline const char *get_son(const char *ptr, size_t len) {
+inline const char *BinNode::g_son(const char *ptr, size_t len) {
     return ptr + len + 1 + sizeof(long) * 2;
 }
 
-// kill
-inline const char *get_brother(const char *start, const char *ptr, size_t len) {
-    return start + *(long *) (ptr + len + 1 + sizeof(long));
-}
-
-inline const char *BinNode::g_son(const char *ptr, size_t len) {
-    return get_son(ptr, len);
-}
-
 inline const char *BinNode::g_brother(const char *ptr, size_t len) {
-    return get_brother(this->start, ptr, len);
+    return start + *(long *) (ptr + len + 1 + sizeof(long));
 }
 
 inline const char *BinNode::go_to(size_t len) {
@@ -56,7 +44,7 @@ void resolveRec(MyString currWord, const char *curr, BinNode &myNode) {
             if (freq != 0) {
                 int dist = lev_max(new_word, new_word.get_string(), new_word.index, myNode.wanted_word,
                                    myNode.approx);
-                if (dist == -1)
+                if (dist == -1) // TODO: here to if and else, and dupicate code to stop with the goto?
                     goto after_son; // current branch is bad, skip the sons
                 if (dist <= myNode.approx) {
                     myNode.out.insert(OutputElement(new_word.get_string(), freq, dist));

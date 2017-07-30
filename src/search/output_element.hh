@@ -25,7 +25,7 @@ public:
      * \param freq The word frequency
      * \param dist The word distance with the searched word
      */
-    OutputElement(const std::string &elt, long freq, int dist) : elt_(elt), freq_(freq), dist_(dist) { }
+    OutputElement(const char* elt, long freq, int dist) : elt_(elt), freq_(freq), dist_(dist) { }
 
     /**
      * Comparaison used to sort tge OutputElement before printing them
