@@ -64,8 +64,8 @@ We have a special treatment if the requested distance is 0, we don't compute a c
 do a custom strcmp.
 
 Otherwise, we compute the edition distance on the first row of nodes of the trie to pick the branches to test.
-Once we picked the branch, we only compute the distance in the word of range [len(requested word) +/- approximation
-allowed].
+Once we picked the branch, we compute the distance until len(requested word) + approximation.
+Though in general branches are deemed bad early, and are cut.
 
 Of course the Damerau-Levenshtein distance is memoized. The matrix where we store the computation is shared to
 avoid to compute the rows computed by the fathers of the current node.
